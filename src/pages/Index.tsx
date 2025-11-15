@@ -1,4 +1,4 @@
-import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType } from "lucide-react";
+import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
@@ -87,6 +87,48 @@ const utilities = [
     path: "/pdf-converter",
     gradient: "from-primary-glow to-primary",
   },
+  {
+    title: "Sound Master",
+    description: "Control app sounds and notifications",
+    icon: Volume2,
+    path: "/sound-master",
+    gradient: "from-accent to-primary",
+  },
+  {
+    title: "Battery Saver",
+    description: "Optimize for longer battery life",
+    icon: Battery,
+    path: "/battery-saver",
+    gradient: "from-primary-glow to-accent",
+  },
+  {
+    title: "MP3 Cutter",
+    description: "Trim and cut audio files",
+    icon: Scissors,
+    path: "/mp3-cutter",
+    gradient: "from-primary to-primary-glow",
+  },
+  {
+    title: "Screen Recorder",
+    description: "Record your screen with audio",
+    icon: Video,
+    path: "/screen-recorder",
+    gradient: "from-accent to-primary-glow",
+  },
+  {
+    title: "Image to Text",
+    description: "Extract text from images",
+    icon: ScanText,
+    path: "/image-to-text",
+    gradient: "from-primary to-accent",
+  },
+  {
+    title: "Video Converter",
+    description: "Convert video formats easily",
+    icon: RefreshCw,
+    path: "/video-converter",
+    gradient: "from-primary-glow to-primary",
+  },
 ];
 
 const Index = () => {
@@ -142,40 +184,6 @@ const Index = () => {
           ))}
         </div>
 
-        {/* Coming Soon Section */}
-        <div className="mt-16 max-w-4xl mx-auto">
-          <div className="bg-gradient-to-br from-muted/50 to-secondary/30 rounded-2xl p-8 border border-border">
-            <h3 className="text-2xl font-bold mb-4 text-center text-foreground">
-              More Utilities Coming Soon
-            </h3>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-primary" />
-                <span>Sound Master</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-accent" />
-                <span>Battery Saver</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-primary-glow" />
-                <span>MP3 Cutter</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-primary" />
-                <span>Screen Recorder</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-accent" />
-                <span>Image to Text</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-primary-glow" />
-                <span>Video Converter</span>
-              </div>
-            </div>
-          </div>
-        </div>
       </main>
 
       {/* Footer */}

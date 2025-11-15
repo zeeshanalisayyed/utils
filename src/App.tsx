@@ -16,6 +16,12 @@ import AppIconCreator from "./pages/AppIconCreator";
 import ScreenshotOrganizer from "./pages/ScreenshotOrganizer";
 import ImageTools from "./pages/ImageTools";
 import PdfConverter from "./pages/PdfConverter";
+import SoundMaster from "./pages/SoundMaster";
+import BatterySaver from "./pages/BatterySaver";
+import Mp3Cutter from "./pages/Mp3Cutter";
+import ScreenRecorder from "./pages/ScreenRecorder";
+import ImageToText from "./pages/ImageToText";
+import VideoConverter from "./pages/VideoConverter";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -40,6 +46,12 @@ const App = () => (
           <Route path="/screenshot-organizer" element={<ScreenshotOrganizer />} />
           <Route path="/image-tools" element={<ImageTools />} />
           <Route path="/pdf-converter" element={<PdfConverter />} />
+          <Route path="/sound-master" element={<SoundMaster />} />
+          <Route path="/battery-saver" element={<BatterySaver />} />
+          <Route path="/mp3-cutter" element={<Mp3Cutter />} />
+          <Route path="/screen-recorder" element={<ScreenRecorder />} />
+          <Route path="/image-to-text" element={<ImageToText />} />
+          <Route path="/video-converter" element={<VideoConverter />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
