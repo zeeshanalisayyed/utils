@@ -1,4 +1,4 @@
-import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Thermometer, Activity } from "lucide-react";
+import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
@@ -43,6 +43,48 @@ const utilities = [
     description: "Message without saving contact",
     icon: MessageCircle,
     path: "/whatsapp-direct",
+    gradient: "from-primary-glow to-primary",
+  },
+  {
+    title: "Reminder App",
+    description: "Never miss important tasks",
+    icon: Bell,
+    path: "/reminder",
+    gradient: "from-accent to-primary-glow",
+  },
+  {
+    title: "Video Downloader",
+    description: "Download from social media",
+    icon: Download,
+    path: "/video-downloader",
+    gradient: "from-primary to-accent",
+  },
+  {
+    title: "App Icon Creator",
+    description: "Create beautiful app icons",
+    icon: Wand2,
+    path: "/app-icon-creator",
+    gradient: "from-primary-glow to-accent",
+  },
+  {
+    title: "Screenshot Organizer",
+    description: "Auto-categorize screenshots",
+    icon: FolderOpen,
+    path: "/screenshot-organizer",
+    gradient: "from-accent to-primary",
+  },
+  {
+    title: "Image Tools",
+    description: "Resize and transform images",
+    icon: Image,
+    path: "/image-tools",
+    gradient: "from-primary to-primary-glow",
+  },
+  {
+    title: "PDF Converter",
+    description: "PDF to Word and vice versa",
+    icon: FileType,
+    path: "/pdf-converter",
     gradient: "from-primary-glow to-primary",
   },
 ];
@@ -109,27 +151,27 @@ const Index = () => {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-primary" />
-                <span>Reminder App</span>
+                <span>Sound Master</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-accent" />
-                <span>Video Downloader</span>
+                <span>Battery Saver</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-primary-glow" />
-                <span>App Icon Creator</span>
+                <span>MP3 Cutter</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-primary" />
-                <span>Screenshot Organizer</span>
+                <span>Screen Recorder</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-accent" />
-                <span>Image Tools</span>
+                <span>Image to Text</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-primary-glow" />
-                <span>PDF Converter</span>
+                <span>Video Converter</span>
               </div>
             </div>
           </div>
