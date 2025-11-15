@@ -190,14 +190,44 @@ const ImageTools = () => {
           <TabsContent value="compress" className="space-y-6">
             <Card className="border-border">
               <CardHeader>
-                <CardTitle>Compress Image</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <Minimize2 className="h-5 w-5" />
+                  Compress Image
+                </CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Reduce image file size while maintaining quality
+              <CardContent className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Reduce image file size while maintaining quality (70% compression)
                 </p>
-                <Button className="w-full" disabled>
-                  Coming Soon
+                <Button onClick={() => {
+                  if (!image) {
+                    toast({ title: "Please upload an image first", variant: "destructive" });
+                    return;
+                  }
+                  const canvas = canvasRef.current;
+                  if (!canvas) return;
+                  const ctx = canvas.getContext("2d");
+                  if (!ctx) return;
+                  const img = new window.Image();
+                  img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob((blob) => {
+                      if (blob) {
+                        const url = URL.createObjectURL(blob);
+                        const link = document.createElement("a");
+                        link.download = "compressed-image.jpg";
+                        link.href = url;
+                        link.click();
+                        toast({ title: "Compressed image downloaded!" });
+                      }
+                    }, "image/jpeg", 0.7);
+                  };
+                  img.src = image;
+                }} className="w-full">
+                  <Download className="h-4 w-4 mr-2" />
+                  Compress & Download
                 </Button>
               </CardContent>
             </Card>
