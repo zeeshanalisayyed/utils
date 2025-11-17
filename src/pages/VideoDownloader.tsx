@@ -48,11 +48,13 @@ const VideoDownloader = () => {
         <Alert className="mb-6 border-primary/20 bg-primary/5">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            This feature requires backend integration to download videos. The interface is ready for implementation.
+            Video downloading requires platform-specific APIs or third-party services. Direct downloads from 
+            YouTube, Instagram, Facebook, and other platforms need their official APIs with proper authentication.
+            Consider using services like yt-dlp, RapidAPI, or platform-specific developer APIs.
           </AlertDescription>
         </Alert>
 
-        <Card className="border-border">
+        <Card className="border-border mb-6">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Download className="h-5 w-5" />
@@ -95,8 +97,28 @@ const VideoDownloader = () => {
 
             <Button className="w-full" disabled>
               <Download className="h-4 w-4 mr-2" />
-              Download Video (Coming Soon)
+              Download Video (Requires API Setup)
             </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="border-border">
+          <CardHeader>
+            <CardTitle>Implementation Options</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm text-muted-foreground">
+            <div>
+              <p className="font-medium text-foreground mb-1">Option 1: Third-Party APIs</p>
+              <p>Use services like RapidAPI's Video Downloader APIs or SaveFrom.net API for multi-platform support.</p>
+            </div>
+            <div>
+              <p className="font-medium text-foreground mb-1">Option 2: Platform-Specific APIs</p>
+              <p>Integrate official APIs from YouTube Data API, Instagram Graph API, etc. with proper OAuth authentication.</p>
+            </div>
+            <div>
+              <p className="font-medium text-foreground mb-1">Option 3: yt-dlp Service</p>
+              <p>Deploy yt-dlp as a backend service for YouTube and many other platforms (requires server setup).</p>
+            </div>
           </CardContent>
         </Card>
       </main>

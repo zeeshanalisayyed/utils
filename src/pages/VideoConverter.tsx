@@ -1,19 +1,25 @@
-import { useState, useRef } from "react";
-import { Video, Upload, Download, RefreshCw, ArrowLeft, AlertCircle } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Video, Upload, Download, RefreshCw, ArrowLeft } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Progress } from "@/components/ui/progress";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
+import { FFmpeg } from "@ffmpeg/ffmpeg";
+import { fetchFile, toBlobURL } from "@ffmpeg/util";
 
 const VideoConverter = () => {
   const { toast } = useToast();
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [outputFormat, setOutputFormat] = useState("mp4");
   const [isConverting, setIsConverting] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [convertedUrl, setConvertedUrl] = useState<string>("");
+  const [ffmpegLoaded, setFfmpegLoaded] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const ffmpegRef = useRef(new FFmpeg());
 
   const formats = [
     { value: "mp4", label: "MP4" },
@@ -21,34 +27,99 @@ const VideoConverter = () => {
     { value: "mov", label: "MOV" },
     { value: "webm", label: "WebM" },
     { value: "mkv", label: "MKV" },
-    { value: "flv", label: "FLV" },
   ];
+
+  useEffect(() => {
+    loadFFmpeg();
+  }, []);
+
+  const loadFFmpeg = async () => {
+    const ffmpeg = ffmpegRef.current;
+    
+    try {
+      const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
+      await ffmpeg.load({
+        coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
+        wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
+      });
+      
+      ffmpeg.on("progress", ({ progress: p }) => {
+        setProgress(Math.round(p * 100));
+      });
+      
+      setFfmpegLoaded(true);
+      toast({ title: "Video converter ready!" });
+    } catch (error) {
+      console.error("Failed to load FFmpeg:", error);
+      toast({ 
+        title: "Failed to load converter", 
+        description: "Please refresh the page",
+        variant: "destructive" 
+      });
+    }
+  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith("video/")) {
       setVideoFile(file);
+      setConvertedUrl("");
       toast({ title: "Video file uploaded" });
     } else {
       toast({ title: "Please upload a valid video file", variant: "destructive" });
     }
   };
 
-  const handleConvert = () => {
+  const handleConvert = async () => {
     if (!videoFile) {
       toast({ title: "Please upload a video file first", variant: "destructive" });
       return;
     }
 
+    if (!ffmpegLoaded) {
+      toast({ title: "Converter is still loading", variant: "destructive" });
+      return;
+    }
+
     setIsConverting(true);
-    // Simulate conversion
-    setTimeout(() => {
+    setProgress(0);
+    setConvertedUrl("");
+
+    try {
+      const ffmpeg = ffmpegRef.current;
+      const inputName = "input.mp4";
+      const outputName = `output.${outputFormat}`;
+
+      await ffmpeg.writeFile(inputName, await fetchFile(videoFile));
+
+      await ffmpeg.exec(["-i", inputName, outputName]);
+
+      const data = await ffmpeg.readFile(outputName);
+      const blob = new Blob([new Uint8Array(data as Uint8Array)], { type: `video/${outputFormat}` });
+      const url = URL.createObjectURL(blob);
+      
+      setConvertedUrl(url);
       setIsConverting(false);
-      toast({
-        title: "Conversion complete",
-        description: "This feature requires backend processing with FFmpeg",
+      toast({ title: "Conversion complete!" });
+    } catch (error) {
+      console.error("Conversion error:", error);
+      setIsConverting(false);
+      toast({ 
+        title: "Conversion failed", 
+        description: error instanceof Error ? error.message : "Unknown error",
+        variant: "destructive" 
       });
-    }, 3000);
+    }
+  };
+
+  const handleDownload = () => {
+    if (convertedUrl) {
+      const a = document.createElement("a");
+      a.href = convertedUrl;
+      a.download = `converted.${outputFormat}`;
+      a.click();
+      toast({ title: "Download started" });
+    }
   };
 
   return (
@@ -70,13 +141,6 @@ const VideoConverter = () => {
           <p className="text-muted-foreground">Convert videos between different formats</p>
         </div>
 
-        <Alert className="mb-6 border-primary/20 bg-primary/5">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Video conversion requires backend processing with FFmpeg. The interface is ready for implementation.
-          </AlertDescription>
-        </Alert>
-
         <div className="space-y-6">
           <Card className="border-border">
             <CardHeader>
@@ -97,9 +161,10 @@ const VideoConverter = () => {
                 onClick={() => fileInputRef.current?.click()}
                 variant="outline"
                 className="w-full"
+                disabled={!ffmpegLoaded}
               >
                 <Video className="h-4 w-4 mr-2" />
-                {videoFile ? videoFile.name : "Select Video File"}
+                {videoFile ? videoFile.name : ffmpegLoaded ? "Select Video File" : "Loading converter..."}
               </Button>
 
               {videoFile && (
@@ -140,16 +205,28 @@ const VideoConverter = () => {
                 </Select>
               </div>
 
+              {isConverting && (
+                <div className="space-y-2">
+                  <Label>Converting: {progress}%</Label>
+                  <Progress value={progress} />
+                </div>
+              )}
+
               <div className="flex gap-2">
                 <Button
                   onClick={handleConvert}
-                  disabled={!videoFile || isConverting}
+                  disabled={!videoFile || isConverting || !ffmpegLoaded}
                   className="flex-1"
                 >
                   <RefreshCw className={`h-4 w-4 mr-2 ${isConverting ? "animate-spin" : ""}`} />
-                  {isConverting ? "Converting..." : "Convert Video"}
+                  {isConverting ? `Converting... ${progress}%` : "Convert Video"}
                 </Button>
-                <Button variant="outline" className="flex-1" disabled>
+                <Button 
+                  variant="outline" 
+                  className="flex-1" 
+                  disabled={!convertedUrl}
+                  onClick={handleDownload}
+                >
                   <Download className="h-4 w-4 mr-2" />
                   Download
                 </Button>
