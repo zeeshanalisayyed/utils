@@ -8,7 +8,8 @@ import { Link } from "react-router-dom";
 
 const ImageToText = () => {
   const { toast } = useToast();
-  const [image, setImage] = useState<string>("");
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [extractedText, setExtractedText] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -16,9 +17,10 @@ const ImageToText = () => {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file && file.type.startsWith("image/")) {
+      setImage(file);
       const reader = new FileReader();
       reader.onload = (e) => {
-        setImage(e.target?.result as string);
+        setImagePreview(e.target?.result as string);
         toast({ title: "Image uploaded" });
       };
       reader.readAsDataURL(file);
@@ -34,14 +36,40 @@ const ImageToText = () => {
     }
 
     setIsProcessing(true);
-    // Simulate OCR processing
-    setTimeout(() => {
-      setExtractedText(
-        "This is a demo text extraction.\n\nIn a production environment, this would use an OCR API like:\n- Google Cloud Vision API\n- Azure Computer Vision\n- AWS Textract\n- Tesseract.js\n\nThe actual implementation requires backend integration."
-      );
+    try {
+      const reader = new FileReader();
+      const base64Promise = new Promise<string>((resolve) => {
+        reader.onload = () => {
+          const base64 = reader.result?.toString().split(',')[1] || '';
+          resolve(base64);
+        };
+      });
+      reader.readAsDataURL(image);
+      const base64 = await base64Promise;
+
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/image-to-text`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({ imageBase64: base64 }),
+      });
+
+      if (!response.ok) throw new Error('Failed to extract text');
+      
+      const result = await response.json();
+      setExtractedText(result.text);
       setIsProcessing(false);
-      toast({ title: "Text extracted successfully" });
-    }, 2000);
+      toast({ title: "Text extracted successfully!" });
+    } catch (error) {
+      setIsProcessing(false);
+      toast({ 
+        title: "Extraction failed", 
+        description: error instanceof Error ? error.message : "Unknown error",
+        variant: "destructive" 
+      });
+    }
   };
 
   const copyToClipboard = () => {
@@ -93,9 +121,9 @@ const ImageToText = () => {
                 Select Image
               </Button>
 
-              {image && (
+              {imagePreview && (
                 <div className="border border-border rounded-lg overflow-hidden">
-                  <img src={image} alt="Uploaded" className="w-full h-auto" />
+                  <img src={imagePreview} alt="Uploaded" className="w-full h-auto" />
                 </div>
               )}
 
