@@ -1,6 +1,7 @@
 import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { AdBanner } from "@/components/AdBanner";
 
 const utilities = [
   {
@@ -162,6 +163,8 @@ const Index = () => {
           </p>
         </div>
 
+        <AdBanner slot="top-banner" format="auto" />
+
         {/* Utility Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
           {utilities.map((utility) => (
@@ -183,6 +186,8 @@ const Index = () => {
             </Link>
           ))}
         </div>
+
+        <AdBanner slot="bottom-banner" format="auto" />
 
       </main>
 

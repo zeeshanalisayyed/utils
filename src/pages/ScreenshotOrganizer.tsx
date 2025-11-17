@@ -9,12 +9,63 @@ import { Link } from "react-router-dom";
 const ScreenshotOrganizer = () => {
   const { toast } = useToast();
   const [files, setFiles] = useState<File[]>([]);
+  const [isOrganizing, setIsOrganizing] = useState(false);
+  const [organized, setOrganized] = useState<Array<{ file: File; category: string; description: string }>>([]);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
       setFiles([...files, ...newFiles]);
       toast({ title: `${newFiles.length} files uploaded` });
+    }
+  };
+
+  const handleOrganize = async () => {
+    if (files.length === 0) {
+      toast({ title: "Please upload screenshots first", variant: "destructive" });
+      return;
+    }
+
+    setIsOrganizing(true);
+    try {
+      const results = await Promise.all(
+        files.map(async (file) => {
+          const reader = new FileReader();
+          const base64Promise = new Promise<string>((resolve) => {
+            reader.onload = () => {
+              const base64 = reader.result?.toString().split(',')[1] || '';
+              resolve(base64);
+            };
+          });
+          reader.readAsDataURL(file);
+          const base64 = await base64Promise;
+
+          const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-screenshot`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            },
+            body: JSON.stringify({ imageBase64: base64 }),
+          });
+
+          if (!response.ok) throw new Error('Failed to analyze screenshot');
+          
+          const result = await response.json();
+          return { file, category: result.category, description: result.description };
+        })
+      );
+
+      setOrganized(results);
+      setIsOrganizing(false);
+      toast({ title: "Screenshots organized successfully!" });
+    } catch (error) {
+      setIsOrganizing(false);
+      toast({ 
+        title: "Organization failed", 
+        description: error instanceof Error ? error.message : "Unknown error",
+        variant: "destructive" 
+      });
     }
   };
 
@@ -77,12 +128,34 @@ const ScreenshotOrganizer = () => {
               </label>
             </div>
             {files.length > 0 && (
-              <p className="mt-4 text-sm text-muted-foreground">
-                {files.length} file(s) uploaded
-              </p>
+              <div className="mt-4 space-y-2">
+                <p className="text-sm text-muted-foreground">{files.length} file(s) uploaded</p>
+                <Button onClick={handleOrganize} disabled={isOrganizing} className="w-full">
+                  {isOrganizing ? "Organizing..." : "Organize Screenshots"}
+                </Button>
+              </div>
             )}
           </CardContent>
         </Card>
+
+        {organized.length > 0 && (
+          <Card className="mb-6 border-border">
+            <CardHeader>
+              <CardTitle>Organized Results</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {organized.map((item, index) => (
+                  <div key={index} className="p-3 bg-muted/50 rounded-lg">
+                    <p className="font-medium">{item.file.name}</p>
+                    <p className="text-sm text-muted-foreground">Category: {item.category}</p>
+                    <p className="text-sm text-muted-foreground">{item.description}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid md:grid-cols-3 gap-4">
           {categories.map((category) => (
