@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { AdBanner } from "@/components/AdBanner";
 
 const IncomeTax = () => {
   const [income, setIncome] = useState("1000000");
@@ -79,6 +80,7 @@ const IncomeTax = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
+        <AdBanner />
         <div className="grid md:grid-cols-2 gap-6">
           {/* Input Card */}
           <Card className="p-6 border-border bg-card">

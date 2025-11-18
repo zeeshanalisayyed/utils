@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
+import { AdBanner } from "@/components/AdBanner";
 
 interface Reminder {
   id: string;
@@ -68,6 +69,7 @@ const Reminder = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
+        <AdBanner />
         <div className="mb-8 text-center">
           <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Reminder App

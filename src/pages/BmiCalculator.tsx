@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { AdBanner } from "@/components/AdBanner";
 
 const BmiCalculator = () => {
   const [weight, setWeight] = useState("70");
@@ -63,6 +64,7 @@ const BmiCalculator = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-2xl">
+        <AdBanner />
         <Card className="p-6 border-border bg-card">
           <h2 className="text-xl font-semibold mb-6 text-foreground">Enter Your Details</h2>
           <div className="space-y-6">

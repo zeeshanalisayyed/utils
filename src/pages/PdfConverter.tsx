@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { PDFDocument, rgb } from "pdf-lib";
 import { Document, Packer, Paragraph, TextRun } from "docx";
+import { AdBanner } from "@/components/AdBanner";
 
 const PdfConverter = () => {
   const { toast } = useToast();
@@ -147,6 +148,7 @@ const PdfConverter = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
+        <AdBanner />
         <div className="mb-8 text-center">
           <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             PDF Converter
