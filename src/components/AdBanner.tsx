@@ -7,7 +7,7 @@ interface AdBannerProps {
 }
 
 export const AdBanner = ({ 
-  slot = 'test-slot-id', 
+  slot = '1203847594', 
   format = 'auto',
   responsive = true 
 }: AdBannerProps) => {
