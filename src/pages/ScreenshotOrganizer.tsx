@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
+import { AdBanner } from "@/components/AdBanner";
 
 const ScreenshotOrganizer = () => {
   const { toast } = useToast();
@@ -90,6 +91,7 @@ const ScreenshotOrganizer = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-6xl">
+        <AdBanner />
         <div className="mb-8 text-center">
           <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Screenshot Organizer

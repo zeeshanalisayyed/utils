@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { AdBanner } from "@/components/AdBanner";
 
 interface Note {
   id: string;
@@ -76,6 +77,7 @@ const Notes = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
+        <AdBanner />
         {/* Add Note Card */}
         <Card className="p-6 border-border bg-card mb-6">
           <h2 className="text-xl font-semibold mb-4 text-foreground">New Note</h2>

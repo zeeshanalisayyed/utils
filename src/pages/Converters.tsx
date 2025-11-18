@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AdBanner } from "@/components/AdBanner";
 
 const Converters = () => {
   // Length Converter
@@ -281,6 +282,7 @@ const Converters = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-4xl">
+        <AdBanner />
         <Tabs defaultValue="length" className="w-full">
           <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 mb-8">
             <TabsTrigger value="length">Length</TabsTrigger>

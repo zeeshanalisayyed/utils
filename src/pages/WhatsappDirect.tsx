@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { AdBanner } from "@/components/AdBanner";
 
 const WhatsappDirect = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -65,6 +66,7 @@ const WhatsappDirect = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-2xl">
+        <AdBanner />
         <Card className="p-6 border-border bg-card">
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-foreground mb-2">Send Message</h2>

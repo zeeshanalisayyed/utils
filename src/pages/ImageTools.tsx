@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
+import { AdBanner } from "@/components/AdBanner";
 
 const ImageTools = () => {
   const { toast } = useToast();
@@ -94,6 +95,7 @@ const ImageTools = () => {
       </header>
 
       <main className="container mx-auto px-4 py-8 max-w-6xl">
+        <AdBanner />
         <div className="mb-8 text-center">
           <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             Image Tools
