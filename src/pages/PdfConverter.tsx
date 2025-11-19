@@ -108,14 +108,16 @@ const PdfConverter = () => {
       let url: string;
       
       if (conversionType === "pdf-to-word") {
+        toast({ title: "Converting PDF to Word...", description: "This may take a moment" });
         url = await convertPdfToWord(file);
       } else {
+        toast({ title: "Converting Word to PDF...", description: "This may take a moment" });
         url = await convertWordToPdf(file);
       }
 
       setConvertedUrl(url);
       setIsConverting(false);
-      toast({ title: "Conversion complete!" });
+      toast({ title: "Conversion complete!", description: "Click download to save your file" });
     } catch (error) {
       setIsConverting(false);
       toast({ 

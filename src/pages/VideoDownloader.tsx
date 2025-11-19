@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, Link as LinkIcon, ArrowLeft, AlertCircle } from "lucide-react";
+import { Download, Link as LinkIcon, ArrowLeft, AlertCircle, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,10 +7,14 @@ import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Link } from "react-router-dom";
 import { AdBanner } from "@/components/AdBanner";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const VideoDownloader = () => {
   const [url, setUrl] = useState("");
   const [platform, setPlatform] = useState("");
+  const [isDownloading, setIsDownloading] = useState(false);
+  const { toast } = useToast();
 
   const detectPlatform = (videoUrl: string) => {
     if (videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be")) return "YouTube";
@@ -25,6 +29,41 @@ const VideoDownloader = () => {
   const handleUrlChange = (value: string) => {
     setUrl(value);
     setPlatform(detectPlatform(value));
+  };
+
+  const handleDownload = async () => {
+    if (!url) {
+      toast({ title: "Please enter a video URL", variant: "destructive" });
+      return;
+    }
+
+    setIsDownloading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('download-video', {
+        body: { url, platform }
+      });
+
+      if (error) throw error;
+
+      if (data?.message) {
+        toast({ 
+          title: "Feature in development", 
+          description: data.message,
+          variant: "destructive"
+        });
+      } else {
+        toast({ title: "Download started!" });
+      }
+    } catch (error) {
+      console.error('Download error:', error);
+      toast({ 
+        title: "Download failed", 
+        description: "This feature requires additional setup with platform APIs",
+        variant: "destructive" 
+      });
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   return (
@@ -97,9 +136,18 @@ const VideoDownloader = () => {
               </div>
             </div>
 
-            <Button className="w-full" disabled>
-              <Download className="h-4 w-4 mr-2" />
-              Download Video (Requires API Setup)
+            <Button className="w-full" onClick={handleDownload} disabled={!url || isDownloading}>
+              {isDownloading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <Download className="h-4 w-4 mr-2" />
+                  Download Video
+                </>
+              )}
             </Button>
           </CardContent>
         </Card>

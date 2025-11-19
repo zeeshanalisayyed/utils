@@ -33,8 +33,8 @@ const WhatsappDirect = () => {
       formattedNumber = "91" + cleanNumber;
     }
 
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${formattedNumber}${message ? `?text=${encodedMessage}` : ""}`;
+    const encodedMessage = encodeURIComponent(message || "Hello");
+    const whatsappUrl = `https://wa.me/${formattedNumber}?text=${encodedMessage}`;
 
     window.open(whatsappUrl, "_blank");
 
