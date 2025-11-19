@@ -110,12 +110,12 @@ const Converters = () => {
 
   const timeUnits = {
     seconds: 1,
-    minutes: 0.0166667,
-    hours: 0.000277778,
-    days: 0.0000115741,
-    weeks: 0.00000165344,
-    months: 3.80265e-7,
-    years: 3.17098e-8,
+    minutes: 60,
+    hours: 3600,
+    days: 86400,
+    weeks: 604800,
+    months: 2592000,
+    years: 31536000,
   };
 
   const convertLength = () => {
@@ -184,9 +184,9 @@ const Converters = () => {
   const convertTime = () => {
     const value = parseFloat(timeValue);
     if (isNaN(value)) return "0";
-    const inSeconds = value / timeUnits[timeFrom as keyof typeof timeUnits];
-    const result = inSeconds * timeUnits[timeTo as keyof typeof timeUnits];
-    return result.toFixed(4);
+    const inSeconds = value * timeUnits[timeFrom as keyof typeof timeUnits];
+    const result = inSeconds / timeUnits[timeTo as keyof typeof timeUnits];
+    return result.toFixed(6);
   };
 
   const renderConverterTab = (

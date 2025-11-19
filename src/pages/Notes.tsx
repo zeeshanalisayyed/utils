@@ -16,7 +16,10 @@ interface Note {
 }
 
 const Notes = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
+  const [notes, setNotes] = useState<Note[]>(() => {
+    const saved = localStorage.getItem("notes");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const { toast } = useToast();
@@ -38,7 +41,9 @@ const Notes = () => {
       createdAt: new Date(),
     };
 
-    setNotes([newNote, ...notes]);
+    const updated = [newNote, ...notes];
+    setNotes(updated);
+    localStorage.setItem("notes", JSON.stringify(updated));
     setTitle("");
     setContent("");
     toast({
@@ -48,7 +53,9 @@ const Notes = () => {
   };
 
   const deleteNote = (id: string) => {
-    setNotes(notes.filter((note) => note.id !== id));
+    const updated = notes.filter((note) => note.id !== id);
+    setNotes(updated);
+    localStorage.setItem("notes", JSON.stringify(updated));
     toast({
       title: "Note deleted",
       description: "Your note has been removed",

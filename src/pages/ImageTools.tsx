@@ -198,8 +198,8 @@ const ImageTools = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Reduce image file size while maintaining quality (70% compression)
+                <p className="text-sm text-muted-foreground mb-4">
+                  Reduce image file size while maintaining quality
                 </p>
                 <Button onClick={() => {
                   if (!image) {
@@ -212,9 +212,26 @@ const ImageTools = () => {
                   if (!ctx) return;
                   const img = new window.Image();
                   img.onload = () => {
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    ctx.drawImage(img, 0, 0);
+                    // Resize to max 1920px while maintaining aspect ratio
+                    const maxSize = 1920;
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    if (width > maxSize || height > maxSize) {
+                      if (width > height) {
+                        height = (height / width) * maxSize;
+                        width = maxSize;
+                      } else {
+                        width = (width / height) * maxSize;
+                        height = maxSize;
+                      }
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Use lower quality for better compression
                     canvas.toBlob((blob) => {
                       if (blob) {
                         const url = URL.createObjectURL(blob);
@@ -222,9 +239,13 @@ const ImageTools = () => {
                         link.download = "compressed-image.jpg";
                         link.href = url;
                         link.click();
-                        toast({ title: "Compressed image downloaded!" });
+                        const sizeMB = (blob.size / (1024 * 1024)).toFixed(2);
+                        toast({ 
+                          title: "Compressed image downloaded!",
+                          description: `File size: ${sizeMB} MB`
+                        });
                       }
-                    }, "image/jpeg", 0.7);
+                    }, "image/jpeg", 0.5);
                   };
                   img.src = image;
                 }} className="w-full">

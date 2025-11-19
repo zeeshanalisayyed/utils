@@ -9,6 +9,10 @@ import { AdBanner } from "@/components/AdBanner";
 const ScreenRecorder = () => {
   const { toast } = useToast();
   const [isRecording, setIsRecording] = useState(false);
+  const [recordings, setRecordings] = useState<Array<{ id: string; url: string; timestamp: number }>>(() => {
+    const saved = localStorage.getItem("recordings");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [recordedUrl, setRecordedUrl] = useState<string>("");
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
@@ -37,6 +41,10 @@ const ScreenRecorder = () => {
         const blob = new Blob(chunksRef.current, { type: "video/webm" });
         const url = URL.createObjectURL(blob);
         setRecordedUrl(url);
+        const newRecording = { id: Date.now().toString(), url, timestamp: Date.now() };
+        const updated = [newRecording, ...recordings];
+        setRecordings(updated);
+        localStorage.setItem("recordings", JSON.stringify(updated));
         stream.getTracks().forEach((track) => track.stop());
       };
 

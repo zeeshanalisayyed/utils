@@ -24,7 +24,10 @@ const Reminder = () => {
 
   useEffect(() => {
     const saved = localStorage.getItem("reminders");
-    if (saved) setReminders(JSON.parse(saved));
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      setReminders(parsed);
+    }
   }, []);
 
   const addReminder = () => {
