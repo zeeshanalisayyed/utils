@@ -22,6 +22,10 @@ import Mp3Cutter from "./pages/Mp3Cutter";
 import ScreenRecorder from "./pages/ScreenRecorder";
 import ImageToText from "./pages/ImageToText";
 import VideoConverter from "./pages/VideoConverter";
+import AboutUs from "./pages/AboutUs";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -52,6 +56,10 @@ const App = () => (
           <Route path="/screen-recorder" element={<ScreenRecorder />} />
           <Route path="/image-to-text" element={<ImageToText />} />
           <Route path="/video-converter" element={<VideoConverter />} />
+          <Route path="/about" element={<AboutUs />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/blog" element={<Blog />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

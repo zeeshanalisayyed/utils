@@ -16,6 +16,8 @@ const Mp3Cutter = () => {
   const [duration, setDuration] = useState(0);
   const [startTime, setStartTime] = useState([0]);
   const [endTime, setEndTime] = useState([30]);
+  const [cutAudioUrl, setCutAudioUrl] = useState<string>("");
+  const [isCutting, setIsCutting] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -45,15 +47,117 @@ const Mp3Cutter = () => {
     return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
-  const handleCut = () => {
+  const handleCut = async () => {
     if (!audioFile) {
       toast({ title: "Please upload an audio file first", variant: "destructive" });
       return;
     }
-    toast({ 
-      title: "Cut audio feature", 
-      description: "This feature requires backend processing for audio manipulation" 
+
+    setIsCutting(true);
+    try {
+      const audioContext = new AudioContext();
+      const arrayBuffer = await audioFile.arrayBuffer();
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+      const start = startTime[0];
+      const end = endTime[0];
+      const length = end - start;
+
+      const startOffset = Math.floor(start * audioBuffer.sampleRate);
+      const endOffset = Math.floor(end * audioBuffer.sampleRate);
+      const newLength = endOffset - startOffset;
+
+      const newBuffer = audioContext.createBuffer(
+        audioBuffer.numberOfChannels,
+        newLength,
+        audioBuffer.sampleRate
+      );
+
+      for (let channel = 0; channel < audioBuffer.numberOfChannels; channel++) {
+        const oldData = audioBuffer.getChannelData(channel);
+        const newData = newBuffer.getChannelData(channel);
+        for (let i = 0; i < newLength; i++) {
+          newData[i] = oldData[startOffset + i];
+        }
+      }
+
+      // Convert to WAV
+      const wavBlob = await audioBufferToWav(newBuffer);
+      const url = URL.createObjectURL(wavBlob);
+      setCutAudioUrl(url);
+      
+      setIsCutting(false);
+      toast({ title: "Audio cut successfully!" });
+    } catch (error) {
+      setIsCutting(false);
+      toast({ 
+        title: "Cut failed", 
+        description: error instanceof Error ? error.message : "Unknown error",
+        variant: "destructive" 
+      });
+    }
+  };
+
+  const audioBufferToWav = (buffer: AudioBuffer): Promise<Blob> => {
+    return new Promise((resolve) => {
+      const length = buffer.length * buffer.numberOfChannels * 2 + 44;
+      const arrayBuffer = new ArrayBuffer(length);
+      const view = new DataView(arrayBuffer);
+      const channels: Float32Array[] = [];
+      let offset = 0;
+      let pos = 0;
+
+      const setUint16 = (data: number) => {
+        view.setUint16(pos, data, true);
+        pos += 2;
+      };
+
+      const setUint32 = (data: number) => {
+        view.setUint32(pos, data, true);
+        pos += 4;
+      };
+
+      // Write WAV header
+      setUint32(0x46464952); // "RIFF"
+      setUint32(length - 8); // file length - 8
+      setUint32(0x45564157); // "WAVE"
+      setUint32(0x20746d66); // "fmt " chunk
+      setUint32(16); // length = 16
+      setUint16(1); // PCM (uncompressed)
+      setUint16(buffer.numberOfChannels);
+      setUint32(buffer.sampleRate);
+      setUint32(buffer.sampleRate * 2 * buffer.numberOfChannels); // avg. bytes/sec
+      setUint16(buffer.numberOfChannels * 2); // block-align
+      setUint16(16); // 16-bit
+      setUint32(0x61746164); // "data" - chunk
+      setUint32(length - pos - 4); // chunk length
+
+      // Write interleaved data
+      for (let i = 0; i < buffer.numberOfChannels; i++) {
+        channels.push(buffer.getChannelData(i));
+      }
+
+      while (pos < length) {
+        for (let i = 0; i < buffer.numberOfChannels; i++) {
+          let sample = Math.max(-1, Math.min(1, channels[i][offset]));
+          sample = sample < 0 ? sample * 0x8000 : sample * 0x7fff;
+          view.setInt16(pos, sample, true);
+          pos += 2;
+        }
+        offset++;
+      }
+
+      resolve(new Blob([arrayBuffer], { type: "audio/wav" }));
     });
+  };
+
+  const handleDownload = () => {
+    if (!cutAudioUrl) return;
+    const a = document.createElement("a");
+    a.href = cutAudioUrl;
+    a.download = `cut_${audioFile?.name.replace(/\.[^/.]+$/, "")}.wav`;
+    a.click();
+    toast({ title: "Audio downloaded" });
   };
 
   return (
@@ -154,11 +258,16 @@ const Mp3Cutter = () => {
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <Button onClick={handleCut} className="flex-1">
+                    <Button onClick={handleCut} className="flex-1" disabled={isCutting}>
                       <Scissors className="h-4 w-4 mr-2" />
-                      Cut Audio
+                      {isCutting ? "Cutting..." : "Cut Audio"}
                     </Button>
-                    <Button variant="outline" className="flex-1" disabled>
+                    <Button 
+                      variant="outline" 
+                      className="flex-1" 
+                      disabled={!cutAudioUrl}
+                      onClick={handleDownload}
+                    >
                       <Download className="h-4 w-4 mr-2" />
                       Download
                     </Button>
