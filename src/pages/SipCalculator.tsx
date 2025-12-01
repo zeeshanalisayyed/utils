@@ -6,11 +6,36 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { AdBanner } from "@/components/AdBanner";
+import { SEOHead } from "@/components/SEOHead";
+import { FAQ } from "@/components/FAQ";
 
 const SipCalculator = () => {
   const [monthlyInvestment, setMonthlyInvestment] = useState("5000");
   const [expectedReturn, setExpectedReturn] = useState("12");
   const [timePeriod, setTimePeriod] = useState("10");
+
+  const faqItems = [
+    {
+      question: "What is SIP and how does it work?",
+      answer: "SIP (Systematic Investment Plan) is a method of investing in mutual funds where you invest a fixed amount at regular intervals (monthly, quarterly). It helps in rupee cost averaging and building wealth over time through disciplined investing."
+    },
+    {
+      question: "How accurate is this SIP calculator?",
+      answer: "This calculator provides estimated returns based on the expected rate of return you input. Actual returns depend on market conditions and fund performance. It's a planning tool to help visualize potential growth."
+    },
+    {
+      question: "What is a good expected return rate for SIP?",
+      answer: "Historical equity mutual fund returns in India average 12-15% annually. However, past performance doesn't guarantee future returns. Consider your risk appetite and investment horizon when selecting funds."
+    },
+    {
+      question: "Can I change my SIP amount later?",
+      answer: "Yes, most mutual funds allow you to increase, decrease, pause, or stop your SIP anytime. There's typically no penalty for modifying your SIP."
+    },
+    {
+      question: "What's the ideal investment period for SIP?",
+      answer: "Longer investment periods (5+ years) are generally recommended for equity SIPs to ride out market volatility. For debt funds, even 3-5 years can be effective."
+    }
+  ];
 
   const calculateReturns = () => {
     const P = parseFloat(monthlyInvestment);
@@ -43,7 +68,27 @@ const SipCalculator = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
+      <SEOHead
+        title="SIP Calculator India - Calculate Mutual Fund Returns | Utility Master"
+        description="Free SIP calculator for India. Calculate your mutual fund returns, investment growth, and wealth creation potential. Plan your SIP investments with accurate projections and compound interest calculations."
+        keywords="SIP calculator, SIP calculator India, mutual fund calculator, systematic investment plan, SIP returns calculator, investment calculator, wealth creation calculator"
+        canonicalUrl="https://utilitymaster.lovable.app/sip-calculator"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "SIP Calculator",
+          "description": "Calculate mutual fund SIP returns and plan your investments",
+          "url": "https://utilitymaster.lovable.app/sip-calculator",
+          "applicationCategory": "FinanceApplication",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "INR"
+          }
+        }}
+      />
+      <div className="min-h-screen bg-background">
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
@@ -149,8 +194,13 @@ const SipCalculator = () => {
             </div>
           </Card>
         </div>
+
+        <div className="mt-8">
+          <FAQ items={faqItems} />
+        </div>
       </main>
     </div>
+    </>
   );
 };
 

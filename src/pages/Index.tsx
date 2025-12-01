@@ -461,7 +461,13 @@ const Index = () => {
             </div>
           </div>
           <div className="text-center text-sm text-muted-foreground pt-6 border-t border-border">
-            <p>© 2024 Utility Master - Your all-in-one productivity toolkit for daily digital tasks</p>
+            <div className="flex flex-wrap justify-center gap-6 mb-4">
+              <Link to="/about" className="hover:text-primary transition-colors">About Us</Link>
+              <Link to="/blog" className="hover:text-primary transition-colors">Blog</Link>
+              <Link to="/privacy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+              <Link to="/terms" className="hover:text-primary transition-colors">Terms of Service</Link>
+            </div>
+            <p>© 2025 Utility Master - Your all-in-one productivity toolkit for daily digital tasks</p>
           </div>
         </div>
       </footer>
