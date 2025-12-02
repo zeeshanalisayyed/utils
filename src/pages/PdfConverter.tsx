@@ -11,7 +11,7 @@ import { AdBanner } from "@/components/AdBanner";
 const PdfConverter = () => {
   const { toast } = useToast();
   const [file, setFile] = useState<File | null>(null);
-  const [conversionType, setConversionType] = useState<"pdf-to-word" | "word-to-pdf">("pdf-to-word");
+  const [conversionType, setConversionType] = useState<"pdf-to-word" | "word-to-pdf" | "image-to-pdf">("pdf-to-word");
   const [isConverting, setIsConverting] = useState(false);
   const [convertedUrl, setConvertedUrl] = useState<string>("");
 
@@ -58,40 +58,101 @@ const PdfConverter = () => {
     }
   };
 
-  const convertWordToPdf = async (wordFile: File) => {
+  const convertWordToPdfBasic = async (wordFile: File) => {
     try {
+      const arrayBuffer = await wordFile.arrayBuffer();
+      
+      // Try to extract text using mammoth if available
+      let text = `Converted from Word: ${wordFile.name}\n\n`;
+      try {
+        const mammoth = await import('mammoth');
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        text = result.value || text;
+      } catch {
+        text += "Note: Full Word to PDF conversion requires specialized parsing.";
+      }
+
       const pdfDoc = await PDFDocument.create();
-      const page = pdfDoc.addPage([600, 800]);
-      
-      const { height } = page.getSize();
+      let currentPage = pdfDoc.addPage([595, 842]); // A4 size
+      let { height } = currentPage.getSize();
       const fontSize = 12;
+      const lineHeight = fontSize * 1.5;
+      const margin = 50;
+      const maxWidth = 495;
+      let y = height - margin;
+
+      // Simple text wrapping and pagination
+      const words = text.split(/\s+/);
+      let line = '';
+
+      for (const word of words) {
+        const testLine = line + (line ? ' ' : '') + word;
+        const testWidth = testLine.length * (fontSize * 0.5);
+        
+        if (testWidth > maxWidth && line !== '') {
+          if (y < margin + lineHeight) {
+            currentPage = pdfDoc.addPage([595, 842]);
+            y = height - margin;
+          }
+          
+          currentPage.drawText(line, {
+            x: margin,
+            y: y,
+            size: fontSize,
+            color: rgb(0, 0, 0),
+          });
+          
+          line = word;
+          y -= lineHeight;
+        } else {
+          line = testLine;
+        }
+      }
       
-      page.drawText(`Converted from Word: ${wordFile.name}`, {
-        x: 50,
-        y: height - 50,
-        size: fontSize,
-        color: rgb(0, 0, 0),
-      });
-      
-      page.drawText("Note: Full Word to PDF conversion requires a specialized parser.", {
-        x: 50,
-        y: height - 80,
-        size: fontSize,
-        color: rgb(0, 0, 0),
-      });
-      
-      page.drawText("This is a basic conversion that creates a PDF document.", {
-        x: 50,
-        y: height - 110,
-        size: fontSize,
-        color: rgb(0, 0, 0),
-      });
+      if (line) {
+        currentPage.drawText(line, {
+          x: margin,
+          y: y,
+          size: fontSize,
+          color: rgb(0, 0, 0),
+        });
+      }
 
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([new Uint8Array(pdfBytes)], { type: "application/pdf" });
       return URL.createObjectURL(blob);
     } catch (error) {
       throw new Error("Failed to convert Word to PDF");
+    }
+  };
+
+  const convertImageToPdfBasic = async (imageFile: File) => {
+    try {
+      const arrayBuffer = await imageFile.arrayBuffer();
+      const pdfDoc = await PDFDocument.create();
+      
+      let image;
+      if (imageFile.type === 'image/png') {
+        image = await pdfDoc.embedPng(arrayBuffer);
+      } else if (imageFile.type === 'image/jpeg' || imageFile.type === 'image/jpg') {
+        image = await pdfDoc.embedJpg(arrayBuffer);
+      } else {
+        throw new Error('Unsupported image format. Please use PNG or JPEG.');
+      }
+
+      const page = pdfDoc.addPage([image.width, image.height]);
+      page.drawImage(image, {
+        x: 0,
+        y: 0,
+        width: image.width,
+        height: image.height,
+      });
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([new Uint8Array(pdfBytes)], { type: "application/pdf" });
+      return URL.createObjectURL(blob);
+    } catch (error) {
+      throw new Error("Failed to convert image to PDF");
     }
   };
 
@@ -102,29 +163,27 @@ const PdfConverter = () => {
     }
 
     setIsConverting(true);
-    setConvertedUrl("");
-
     try {
-      let url: string;
+      let url = "";
       
       if (conversionType === "pdf-to-word") {
-        toast({ title: "Converting PDF to Word...", description: "This may take a moment" });
         url = await convertPdfToWord(file);
-      } else {
-        toast({ title: "Converting Word to PDF...", description: "This may take a moment" });
-        url = await convertWordToPdf(file);
+      } else if (conversionType === "word-to-pdf") {
+        url = await convertWordToPdfBasic(file);
+      } else if (conversionType === "image-to-pdf") {
+        url = await convertImageToPdfBasic(file);
       }
-
+      
       setConvertedUrl(url);
-      setIsConverting(false);
-      toast({ title: "Conversion complete!", description: "Click download to save your file" });
+      toast({ title: "Conversion completed successfully!" });
     } catch (error) {
-      setIsConverting(false);
       toast({ 
         title: "Conversion failed", 
         description: error instanceof Error ? error.message : "Unknown error",
         variant: "destructive" 
       });
+    } finally {
+      setIsConverting(false);
     }
   };
 
@@ -155,10 +214,10 @@ const PdfConverter = () => {
           <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
             PDF Converter
           </h1>
-          <p className="text-muted-foreground">Convert PDF to Word and vice versa</p>
+          <p className="text-muted-foreground">Convert between PDF, Word, and Image formats</p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-4 mb-6">
+        <div className="grid md:grid-cols-3 gap-4 mb-6">
           <Card
             className={`cursor-pointer border-2 transition-colors ${
               conversionType === "pdf-to-word"
@@ -174,7 +233,7 @@ const PdfConverter = () => {
             <CardContent className="p-6 text-center">
               <FileText className="h-12 w-12 mx-auto mb-3 text-primary" />
               <h3 className="font-semibold text-lg">PDF to Word</h3>
-              <p className="text-sm text-muted-foreground mt-1">Convert PDF to DOCX format</p>
+              <p className="text-sm text-muted-foreground mt-1">Convert PDF to DOCX</p>
             </CardContent>
           </Card>
 
@@ -193,7 +252,26 @@ const PdfConverter = () => {
             <CardContent className="p-6 text-center">
               <FileText className="h-12 w-12 mx-auto mb-3 text-accent" />
               <h3 className="font-semibold text-lg">Word to PDF</h3>
-              <p className="text-sm text-muted-foreground mt-1">Convert DOCX to PDF format</p>
+              <p className="text-sm text-muted-foreground mt-1">Convert DOCX to PDF</p>
+            </CardContent>
+          </Card>
+
+          <Card
+            className={`cursor-pointer border-2 transition-colors ${
+              conversionType === "image-to-pdf"
+                ? "border-primary bg-primary/5"
+                : "border-border hover:border-primary/50"
+            }`}
+            onClick={() => {
+              setConversionType("image-to-pdf");
+              setFile(null);
+              setConvertedUrl("");
+            }}
+          >
+            <CardContent className="p-6 text-center">
+              <Upload className="h-12 w-12 mx-auto mb-3 text-primary" />
+              <h3 className="font-semibold text-lg">Image to PDF</h3>
+              <p className="text-sm text-muted-foreground mt-1">Convert JPG/PNG to PDF</p>
             </CardContent>
           </Card>
         </div>
@@ -209,7 +287,13 @@ const PdfConverter = () => {
             <div className="border-2 border-dashed border-border rounded-lg p-12 text-center hover:border-primary/50 transition-colors">
               <input
                 type="file"
-                accept={conversionType === "pdf-to-word" ? ".pdf" : ".doc,.docx"}
+                accept={
+                  conversionType === "pdf-to-word" 
+                    ? ".pdf" 
+                    : conversionType === "word-to-pdf"
+                    ? ".doc,.docx"
+                    : "image/*"
+                }
                 onChange={handleFileUpload}
                 className="hidden"
                 id="file-upload"
@@ -220,7 +304,11 @@ const PdfConverter = () => {
                   {file ? file.name : "Click to upload file"}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {conversionType === "pdf-to-word" ? "Upload PDF file" : "Upload Word file"}
+                  {conversionType === "pdf-to-word" 
+                    ? "Upload PDF file" 
+                    : conversionType === "word-to-pdf"
+                    ? "Upload Word file"
+                    : "Upload image file"}
                 </p>
               </label>
             </div>
@@ -253,9 +341,10 @@ const PdfConverter = () => {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              This converter provides basic PDF ↔ Word conversion. For production use with complex documents,
-              consider using specialized services like Adobe Acrobat, CloudConvert, or similar professional tools
-              that handle advanced formatting, images, tables, and other document elements.
+              This converter provides basic conversion between PDF, Word, and Image formats. 
+              For production use with complex documents containing advanced formatting, images, tables, 
+              and other elements, consider using specialized services like Adobe Acrobat, CloudConvert, 
+              or similar professional tools.
             </p>
           </CardContent>
         </Card>
