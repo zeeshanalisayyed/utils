@@ -56,9 +56,9 @@ const App = () => (
           <Route path="/screen-recorder" element={<ScreenRecorder />} />
           <Route path="/image-to-text" element={<ImageToText />} />
           <Route path="/video-converter" element={<VideoConverter />} />
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/blog" element={<Blog />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
