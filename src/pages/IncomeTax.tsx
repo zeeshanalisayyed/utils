@@ -1,14 +1,12 @@
 import { useState } from "react";
-import { ArrowLeft, Calculator } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { AdBanner } from "@/components/AdBanner";
 import { SEOHead } from "@/components/SEOHead";
 import { FAQ } from "@/components/FAQ";
+import { PageLayout } from "@/components/PageLayout";
 
 const IncomeTax = () => {
   const [income, setIncome] = useState("1000000");
@@ -46,7 +44,6 @@ const IncomeTax = () => {
     let tax = 0;
 
     if (regime === "new") {
-      // New Tax Regime (FY 2023-24)
       if (annualIncome <= 300000) tax = 0;
       else if (annualIncome <= 600000) tax = (annualIncome - 300000) * 0.05;
       else if (annualIncome <= 900000) tax = 15000 + (annualIncome - 600000) * 0.1;
@@ -54,14 +51,13 @@ const IncomeTax = () => {
       else if (annualIncome <= 1500000) tax = 90000 + (annualIncome - 1200000) * 0.2;
       else tax = 150000 + (annualIncome - 1500000) * 0.3;
     } else {
-      // Old Tax Regime
       if (annualIncome <= 250000) tax = 0;
       else if (annualIncome <= 500000) tax = (annualIncome - 250000) * 0.05;
       else if (annualIncome <= 1000000) tax = 12500 + (annualIncome - 500000) * 0.2;
       else tax = 112500 + (annualIncome - 1000000) * 0.3;
     }
 
-    const cess = tax * 0.04; // 4% Health and Education Cess
+    const cess = tax * 0.04;
     const totalTax = tax + cess;
     const netIncome = annualIncome - totalTax;
 
@@ -104,30 +100,12 @@ const IncomeTax = () => {
           }
         }}
       />
-      <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link to="/">
-              <Button variant="ghost" size="icon" className="rounded-xl">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-accent to-primary-glow flex items-center justify-center">
-              <Calculator className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Income Tax Calculator</h1>
-              <p className="text-xs text-muted-foreground">Calculate your tax liability (India)</p>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
+      <PageLayout
+        title="Income Tax Calculator"
+        description="Calculate your tax liability for India (FY 2024-25)"
+      >
         <AdBanner />
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Input Card */}
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           <Card className="p-6 border-border bg-card">
             <h2 className="text-xl font-semibold mb-6 text-foreground">Income Details</h2>
             <div className="space-y-6">
@@ -173,7 +151,6 @@ const IncomeTax = () => {
             </div>
           </Card>
 
-          {/* Results Card */}
           <Card className="p-6 border-border bg-gradient-to-br from-accent/5 to-primary/5">
             <h2 className="text-xl font-semibold mb-6 text-foreground">Tax Breakdown</h2>
             <div className="space-y-4">
@@ -211,11 +188,10 @@ const IncomeTax = () => {
           </Card>
         </div>
 
-        <div className="mt-8">
+        <div className="mt-8 max-w-4xl mx-auto">
           <FAQ items={faqItems} />
         </div>
-      </main>
-    </div>
+      </PageLayout>
     </>
   );
 };
