@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { ArrowLeft, TrendingUp } from "lucide-react";
-import { Link } from "react-router-dom";
+import { TrendingUp } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { AdBanner } from "@/components/AdBanner";
 import { SEOHead } from "@/components/SEOHead";
 import { FAQ } from "@/components/FAQ";
+import { PageLayout } from "@/components/PageLayout";
 
 const SipCalculator = () => {
   const [monthlyInvestment, setMonthlyInvestment] = useState("5000");
@@ -88,30 +87,12 @@ const SipCalculator = () => {
           }
         }}
       />
-      <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link to="/">
-              <Button variant="ghost" size="icon" className="rounded-xl">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-primary-glow flex items-center justify-center">
-              <TrendingUp className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">SIP Calculator</h1>
-              <p className="text-xs text-muted-foreground">Calculate your investment returns</p>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
+      <PageLayout
+        title="SIP Calculator"
+        description="Calculate your investment returns and plan your financial future"
+      >
         <AdBanner />
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Input Card */}
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
           <Card className="p-6 border-border bg-card">
             <h2 className="text-xl font-semibold mb-6 text-foreground">Investment Details</h2>
             <div className="space-y-6">
@@ -160,7 +141,6 @@ const SipCalculator = () => {
             </div>
           </Card>
 
-          {/* Results Card */}
           <Card className="p-6 border-border bg-gradient-to-br from-primary/5 to-primary-glow/5">
             <h2 className="text-xl font-semibold mb-6 text-foreground">Results</h2>
             <div className="space-y-4">
@@ -195,11 +175,10 @@ const SipCalculator = () => {
           </Card>
         </div>
 
-        <div className="mt-8">
+        <div className="mt-8 max-w-4xl mx-auto">
           <FAQ items={faqItems} />
         </div>
-      </main>
-    </div>
+      </PageLayout>
     </>
   );
 };

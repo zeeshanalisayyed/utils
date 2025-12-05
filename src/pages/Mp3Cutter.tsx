@@ -1,13 +1,12 @@
 import { useState, useRef } from "react";
-import { Music, Upload, Scissors, Download, ArrowLeft } from "lucide-react";
+import { Music, Upload, Scissors, Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
 import { AdBanner } from "@/components/AdBanner";
+import { PageLayout } from "@/components/PageLayout";
 
 const Mp3Cutter = () => {
   const { toast } = useToast();
@@ -52,27 +51,17 @@ const Mp3Cutter = () => {
       toast({ title: "Please upload an audio file first", variant: "destructive" });
       return;
     }
-
     setIsCutting(true);
     try {
       const audioContext = new AudioContext();
       const arrayBuffer = await audioFile.arrayBuffer();
       const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
       const start = startTime[0];
       const end = endTime[0];
-      const length = end - start;
-
       const startOffset = Math.floor(start * audioBuffer.sampleRate);
       const endOffset = Math.floor(end * audioBuffer.sampleRate);
       const newLength = endOffset - startOffset;
-
-      const newBuffer = audioContext.createBuffer(
-        audioBuffer.numberOfChannels,
-        newLength,
-        audioBuffer.sampleRate
-      );
-
+      const newBuffer = audioContext.createBuffer(audioBuffer.numberOfChannels, newLength, audioBuffer.sampleRate);
       for (let channel = 0; channel < audioBuffer.numberOfChannels; channel++) {
         const oldData = audioBuffer.getChannelData(channel);
         const newData = newBuffer.getChannelData(channel);
@@ -80,21 +69,14 @@ const Mp3Cutter = () => {
           newData[i] = oldData[startOffset + i];
         }
       }
-
-      // Convert to WAV
       const wavBlob = await audioBufferToWav(newBuffer);
       const url = URL.createObjectURL(wavBlob);
       setCutAudioUrl(url);
-      
       setIsCutting(false);
       toast({ title: "Audio cut successfully!" });
     } catch (error) {
       setIsCutting(false);
-      toast({ 
-        title: "Cut failed", 
-        description: error instanceof Error ? error.message : "Unknown error",
-        variant: "destructive" 
-      });
+      toast({ title: "Cut failed", description: error instanceof Error ? error.message : "Unknown error", variant: "destructive" });
     }
   };
 
@@ -106,37 +88,24 @@ const Mp3Cutter = () => {
       const channels: Float32Array[] = [];
       let offset = 0;
       let pos = 0;
-
-      const setUint16 = (data: number) => {
-        view.setUint16(pos, data, true);
-        pos += 2;
-      };
-
-      const setUint32 = (data: number) => {
-        view.setUint32(pos, data, true);
-        pos += 4;
-      };
-
-      // Write WAV header
-      setUint32(0x46464952); // "RIFF"
-      setUint32(length - 8); // file length - 8
-      setUint32(0x45564157); // "WAVE"
-      setUint32(0x20746d66); // "fmt " chunk
-      setUint32(16); // length = 16
-      setUint16(1); // PCM (uncompressed)
+      const setUint16 = (data: number) => { view.setUint16(pos, data, true); pos += 2; };
+      const setUint32 = (data: number) => { view.setUint32(pos, data, true); pos += 4; };
+      setUint32(0x46464952);
+      setUint32(length - 8);
+      setUint32(0x45564157);
+      setUint32(0x20746d66);
+      setUint32(16);
+      setUint16(1);
       setUint16(buffer.numberOfChannels);
       setUint32(buffer.sampleRate);
-      setUint32(buffer.sampleRate * 2 * buffer.numberOfChannels); // avg. bytes/sec
-      setUint16(buffer.numberOfChannels * 2); // block-align
-      setUint16(16); // 16-bit
-      setUint32(0x61746164); // "data" - chunk
-      setUint32(length - pos - 4); // chunk length
-
-      // Write interleaved data
+      setUint32(buffer.sampleRate * 2 * buffer.numberOfChannels);
+      setUint16(buffer.numberOfChannels * 2);
+      setUint16(16);
+      setUint32(0x61746164);
+      setUint32(length - pos - 4);
       for (let i = 0; i < buffer.numberOfChannels; i++) {
         channels.push(buffer.getChannelData(i));
       }
-
       while (pos < length) {
         for (let i = 0; i < buffer.numberOfChannels; i++) {
           let sample = Math.max(-1, Math.min(1, channels[i][offset]));
@@ -146,7 +115,6 @@ const Mp3Cutter = () => {
         }
         offset++;
       }
-
       resolve(new Blob([arrayBuffer], { type: "audio/wav" }));
     });
   };
@@ -161,124 +129,61 @@ const Mp3Cutter = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
-        </div>
-      </header>
+    <PageLayout title="MP3 Cutter" description="Trim and cut your audio files with precision">
+      <AdBanner />
+      <div className="space-y-6 max-w-4xl mx-auto">
+        <Card className="border-border">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2"><Upload className="h-5 w-5" />Upload Audio</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <input ref={fileInputRef} type="file" accept="audio/*" onChange={handleFileUpload} className="hidden" />
+            <Button onClick={() => fileInputRef.current?.click()} variant="outline" className="w-full">
+              <Music className="h-4 w-4 mr-2" />
+              {audioFile ? audioFile.name : "Select Audio File"}
+            </Button>
+          </CardContent>
+        </Card>
 
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <AdBanner />
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            MP3 Cutter
-          </h1>
-          <p className="text-muted-foreground">Trim and cut your audio files</p>
-        </div>
+        {audioUrl && (
+          <>
+            <Card className="border-border">
+              <CardHeader><CardTitle>Audio Player</CardTitle></CardHeader>
+              <CardContent>
+                <audio ref={audioRef} src={audioUrl} controls className="w-full" onLoadedMetadata={handleLoadedMetadata} />
+              </CardContent>
+            </Card>
 
-        <div className="space-y-6">
-          <Card className="border-border">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Upload className="h-5 w-5" />
-                Upload Audio
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="audio/*"
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-              <Button 
-                onClick={() => fileInputRef.current?.click()} 
-                variant="outline" 
-                className="w-full"
-              >
-                <Music className="h-4 w-4 mr-2" />
-                {audioFile ? audioFile.name : "Select Audio File"}
-              </Button>
-            </CardContent>
-          </Card>
-
-          {audioUrl && (
-            <>
-              <Card className="border-border">
-                <CardHeader>
-                  <CardTitle>Audio Player</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <audio
-                    ref={audioRef}
-                    src={audioUrl}
-                    controls
-                    className="w-full"
-                    onLoadedMetadata={handleLoadedMetadata}
-                  />
-                </CardContent>
-              </Card>
-
-              <Card className="border-border">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Scissors className="h-5 w-5" />
-                    Cut Settings
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div>
-                    <Label>Start Time: {formatTime(startTime[0])}</Label>
-                    <Slider
-                      value={startTime}
-                      onValueChange={setStartTime}
-                      max={duration}
-                      step={0.1}
-                      className="mt-2"
-                    />
-                  </div>
-                  <div>
-                    <Label>End Time: {formatTime(endTime[0])}</Label>
-                    <Slider
-                      value={endTime}
-                      onValueChange={setEndTime}
-                      max={duration}
-                      step={0.1}
-                      className="mt-2"
-                    />
-                  </div>
-                  <div className="bg-muted/50 rounded-lg p-4">
-                    <p className="text-sm text-muted-foreground">
-                      Selected duration: {formatTime(endTime[0] - startTime[0])}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button onClick={handleCut} className="flex-1" disabled={isCutting}>
-                      <Scissors className="h-4 w-4 mr-2" />
-                      {isCutting ? "Cutting..." : "Cut Audio"}
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      className="flex-1" 
-                      disabled={!cutAudioUrl}
-                      onClick={handleDownload}
-                    >
-                      <Download className="h-4 w-4 mr-2" />
-                      Download
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </>
-          )}
-        </div>
-      </main>
-    </div>
+            <Card className="border-border">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2"><Scissors className="h-5 w-5" />Cut Settings</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <Label>Start Time: {formatTime(startTime[0])}</Label>
+                  <Slider value={startTime} onValueChange={setStartTime} max={duration} step={0.1} className="mt-2" />
+                </div>
+                <div>
+                  <Label>End Time: {formatTime(endTime[0])}</Label>
+                  <Slider value={endTime} onValueChange={setEndTime} max={duration} step={0.1} className="mt-2" />
+                </div>
+                <div className="bg-muted/50 rounded-lg p-4">
+                  <p className="text-sm text-muted-foreground">Selected duration: {formatTime(endTime[0] - startTime[0])}</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button onClick={handleCut} className="flex-1" disabled={isCutting}>
+                    <Scissors className="h-4 w-4 mr-2" />{isCutting ? "Cutting..." : "Cut Audio"}
+                  </Button>
+                  <Button variant="outline" className="flex-1" disabled={!cutAudioUrl} onClick={handleDownload}>
+                    <Download className="h-4 w-4 mr-2" />Download
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </>
+        )}
+      </div>
+    </PageLayout>
   );
 };
 

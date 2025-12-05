@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { Volume2, VolumeX, Bell, BellOff, Music, ArrowLeft } from "lucide-react";
+import { Volume2, VolumeX, Bell, BellOff, Music } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
 import { AdBanner } from "@/components/AdBanner";
+import { PageLayout } from "@/components/PageLayout";
 
 const SoundMaster = () => {
   const { toast } = useToast();
@@ -28,168 +28,64 @@ const SoundMaster = () => {
     }
   }, []);
 
-  const saveSettings = (settings: any) => {
+  const saveSettings = (settings: Record<string, unknown>) => {
     localStorage.setItem("sound-settings", JSON.stringify(settings));
     toast({ title: "Settings saved" });
   };
 
   const handleVolumeChange = (value: number[]) => {
     setMasterVolume(value);
-    saveSettings({
-      masterVolume: value[0],
-      notificationsEnabled,
-      mediaEnabled,
-      systemSoundsEnabled,
-      alarmEnabled,
-    });
+    saveSettings({ masterVolume: value[0], notificationsEnabled, mediaEnabled, systemSoundsEnabled, alarmEnabled });
   };
 
   const toggleSetting = (key: string, value: boolean) => {
-    const settings = {
-      masterVolume: masterVolume[0],
-      notificationsEnabled,
-      mediaEnabled,
-      systemSoundsEnabled,
-      alarmEnabled,
-      [key]: value,
-    };
-    
+    const settings = { masterVolume: masterVolume[0], notificationsEnabled, mediaEnabled, systemSoundsEnabled, alarmEnabled, [key]: value };
     if (key === "notificationsEnabled") setNotificationsEnabled(value);
     if (key === "mediaEnabled") setMediaEnabled(value);
     if (key === "systemSoundsEnabled") setSystemSoundsEnabled(value);
     if (key === "alarmEnabled") setAlarmEnabled(value);
-    
     saveSettings(settings);
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
-        </div>
-      </header>
+    <PageLayout title="Sound Master" description="Control all your app sounds and notifications">
+      <AdBanner />
+      <div className="space-y-6 max-w-4xl mx-auto">
+        <Card className="border-border">
+          <CardHeader><CardTitle className="flex items-center gap-2"><Volume2 className="h-5 w-5" />Master Volume</CardTitle></CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-4">
+              {masterVolume[0] === 0 ? <VolumeX className="h-6 w-6 text-muted-foreground" /> : <Volume2 className="h-6 w-6 text-primary" />}
+              <Slider value={masterVolume} onValueChange={handleVolumeChange} max={100} step={1} className="flex-1" />
+              <span className="text-sm font-medium w-12 text-right">{masterVolume[0]}%</span>
+            </div>
+          </CardContent>
+        </Card>
 
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <AdBanner />
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Sound Master
-          </h1>
-          <p className="text-muted-foreground">Control all your app sounds and notifications</p>
-        </div>
-
-        <div className="space-y-6">
-          <Card className="border-border">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Volume2 className="h-5 w-5" />
-                Master Volume
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center gap-4">
-                {masterVolume[0] === 0 ? (
-                  <VolumeX className="h-6 w-6 text-muted-foreground" />
-                ) : (
-                  <Volume2 className="h-6 w-6 text-primary" />
-                )}
-                <Slider
-                  value={masterVolume}
-                  onValueChange={handleVolumeChange}
-                  max={100}
-                  step={1}
-                  className="flex-1"
-                />
-                <span className="text-sm font-medium w-12 text-right">{masterVolume[0]}%</span>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border">
-            <CardHeader>
-              <CardTitle>Sound Categories</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
+        <Card className="border-border">
+          <CardHeader><CardTitle>Sound Categories</CardTitle></CardHeader>
+          <CardContent className="space-y-6">
+            {[
+              { key: "notificationsEnabled", label: "Notifications", desc: "App notifications and alerts", enabled: notificationsEnabled, Icon: notificationsEnabled ? Bell : BellOff },
+              { key: "mediaEnabled", label: "Media", desc: "Music and video playback", enabled: mediaEnabled, Icon: Music },
+              { key: "systemSoundsEnabled", label: "System Sounds", desc: "Clicks and touch feedback", enabled: systemSoundsEnabled, Icon: Volume2 },
+              { key: "alarmEnabled", label: "Alarms", desc: "Alarm and reminder sounds", enabled: alarmEnabled, Icon: Bell },
+            ].map(({ key, label, desc, enabled, Icon }) => (
+              <div key={key} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  {notificationsEnabled ? (
-                    <Bell className="h-5 w-5 text-primary" />
-                  ) : (
-                    <BellOff className="h-5 w-5 text-muted-foreground" />
-                  )}
+                  <Icon className={`h-5 w-5 ${enabled ? "text-primary" : "text-muted-foreground"}`} />
                   <div>
-                    <Label htmlFor="notifications" className="text-base font-medium">
-                      Notifications
-                    </Label>
-                    <p className="text-sm text-muted-foreground">App notifications and alerts</p>
+                    <Label htmlFor={key} className="text-base font-medium">{label}</Label>
+                    <p className="text-sm text-muted-foreground">{desc}</p>
                   </div>
                 </div>
-                <Switch
-                  id="notifications"
-                  checked={notificationsEnabled}
-                  onCheckedChange={(checked) => toggleSetting("notificationsEnabled", checked)}
-                />
+                <Switch id={key} checked={enabled} onCheckedChange={(checked) => toggleSetting(key, checked)} />
               </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Music className="h-5 w-5 text-primary" />
-                  <div>
-                    <Label htmlFor="media" className="text-base font-medium">
-                      Media
-                    </Label>
-                    <p className="text-sm text-muted-foreground">Music and video playback</p>
-                  </div>
-                </div>
-                <Switch
-                  id="media"
-                  checked={mediaEnabled}
-                  onCheckedChange={(checked) => toggleSetting("mediaEnabled", checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Volume2 className="h-5 w-5 text-primary" />
-                  <div>
-                    <Label htmlFor="system" className="text-base font-medium">
-                      System Sounds
-                    </Label>
-                    <p className="text-sm text-muted-foreground">Clicks and touch feedback</p>
-                  </div>
-                </div>
-                <Switch
-                  id="system"
-                  checked={systemSoundsEnabled}
-                  onCheckedChange={(checked) => toggleSetting("systemSoundsEnabled", checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Bell className="h-5 w-5 text-primary" />
-                  <div>
-                    <Label htmlFor="alarm" className="text-base font-medium">
-                      Alarms
-                    </Label>
-                    <p className="text-sm text-muted-foreground">Alarm and reminder sounds</p>
-                  </div>
-                </div>
-                <Switch
-                  id="alarm"
-                  checked={alarmEnabled}
-                  onCheckedChange={(checked) => toggleSetting("alarmEnabled", checked)}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
-    </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    </PageLayout>
   );
 };
 
