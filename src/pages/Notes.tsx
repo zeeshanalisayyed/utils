@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { ArrowLeft, Plus, Trash2, FileText } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Plus, Trash2, FileText } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { AdBanner } from "@/components/AdBanner";
+import { PageLayout } from "@/components/PageLayout";
+import { SEOHead } from "@/components/SEOHead";
 
 interface Note {
   id: string;
@@ -62,31 +63,32 @@ const Notes = () => {
     });
   };
 
-  return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link to="/">
-              <Button variant="ghost" size="icon" className="rounded-xl">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-              <FileText className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">Notes</h1>
-              <p className="text-xs text-muted-foreground">Quick notes and reminders</p>
-            </div>
-          </div>
-        </div>
-      </header>
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Notes App - Utility Master",
+    "applicationCategory": "UtilitiesApplication",
+    "description": "Create and manage quick notes and reminders. Free note-taking app with local storage.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  };
 
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <AdBanner />
-        {/* Add Note Card */}
-        <Card className="p-6 border-border bg-card mb-6">
+  return (
+    <PageLayout
+      title="Notes"
+      description="Quick notes and reminders"
+    >
+      <SEOHead
+        title="Notes App - Quick Notes & Reminders | Utility Master"
+        description="Create and manage quick notes and reminders. Free note-taking app with local storage - no sign up required."
+        keywords="notes app, quick notes, reminders, note taking, free notes app"
+        canonicalUrl="https://utilitymaster.app/notes"
+        structuredData={structuredData}
+      />
+
+      <AdBanner />
+
+      <div className="max-w-4xl mx-auto space-y-6">
+        <Card className="p-6 border-border bg-card">
           <h2 className="text-xl font-semibold mb-4 text-foreground">New Note</h2>
           <div className="space-y-4">
             <Input
@@ -108,7 +110,6 @@ const Notes = () => {
           </div>
         </Card>
 
-        {/* Notes List */}
         {notes.length === 0 ? (
           <Card className="p-12 border-border bg-card/50">
             <div className="text-center">
@@ -133,8 +134,8 @@ const Notes = () => {
                       {note.content}
                     </p>
                     <p className="text-xs text-muted-foreground mt-3">
-                      {note.createdAt.toLocaleDateString()} at{" "}
-                      {note.createdAt.toLocaleTimeString([], {
+                      {new Date(note.createdAt).toLocaleDateString()} at{" "}
+                      {new Date(note.createdAt).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
@@ -153,8 +154,8 @@ const Notes = () => {
             ))}
           </div>
         )}
-      </main>
-    </div>
+      </div>
+    </PageLayout>
   );
 };
 

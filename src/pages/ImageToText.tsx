@@ -1,11 +1,13 @@
 import { useState, useRef } from "react";
-import { FileText, Upload, Image as ImageIcon, Copy, ArrowLeft } from "lucide-react";
+import { FileText, Upload, Image as ImageIcon, Copy } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
 import { AdBanner } from "@/components/AdBanner";
+import { PageLayout } from "@/components/PageLayout";
+import { SEOHead } from "@/components/SEOHead";
+import { FAQ } from "@/components/FAQ";
 
 const ImageToText = () => {
   const { toast } = useToast();
@@ -78,26 +80,37 @@ const ImageToText = () => {
     toast({ title: "Text copied to clipboard" });
   };
 
+  const faqItems = [
+    { question: "What image formats are supported?", answer: "We support JPG, PNG, GIF, BMP, and WebP image formats for text extraction." },
+    { question: "How accurate is the text extraction?", answer: "Our OCR technology provides high accuracy for printed text. Handwritten text may have lower accuracy depending on clarity." },
+    { question: "Is there a file size limit?", answer: "For best results, keep images under 10MB. Larger files may take longer to process." },
+  ];
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Image to Text - Utility Master",
+    "applicationCategory": "UtilitiesApplication",
+    "description": "Extract text from images using advanced OCR technology. Free online image to text converter.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
-        </div>
-      </header>
+    <PageLayout
+      title="Image to Text"
+      description="Extract text from images using OCR"
+    >
+      <SEOHead
+        title="Image to Text - OCR Text Extractor | Utility Master"
+        description="Extract text from images using advanced OCR technology. Free online image to text converter - no sign up required."
+        keywords="image to text, OCR, text extractor, photo to text, image scanner"
+        canonicalUrl="https://utilitymaster.app/image-to-text"
+        structuredData={structuredData}
+      />
 
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <AdBanner />
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Image to Text
-          </h1>
-          <p className="text-muted-foreground">Extract text from images using OCR</p>
-        </div>
+      <AdBanner />
 
+      <div className="max-w-4xl mx-auto space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
           <Card className="border-border">
             <CardHeader>
@@ -168,8 +181,10 @@ const ImageToText = () => {
             </CardContent>
           </Card>
         </div>
-      </main>
-    </div>
+
+        <FAQ items={faqItems} />
+      </div>
+    </PageLayout>
   );
 };
 

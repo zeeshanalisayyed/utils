@@ -1,12 +1,14 @@
 import { useState, useRef } from "react";
-import { Image, Download, ArrowLeft, Type } from "lucide-react";
+import { Image, Download, Type } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
 import { AdBanner } from "@/components/AdBanner";
+import { PageLayout } from "@/components/PageLayout";
+import { SEOHead } from "@/components/SEOHead";
+import { FAQ } from "@/components/FAQ";
 
 const AppIconCreator = () => {
   const { toast } = useToast();
@@ -26,11 +28,9 @@ const AppIconCreator = () => {
     canvas.width = 512;
     canvas.height = 512;
 
-    // Background
     ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, 512, 512);
 
-    // Text
     ctx.fillStyle = textColor;
     ctx.font = "bold 200px Arial";
     ctx.textAlign = "center";
@@ -54,26 +54,37 @@ const AppIconCreator = () => {
     toast({ title: "Icon downloaded!" });
   };
 
+  const faqItems = [
+    { question: "What size is the generated icon?", answer: "Icons are generated at 512x512 pixels, which is the standard size for most app stores and platforms." },
+    { question: "Can I customize the font?", answer: "Currently, the tool uses a clean sans-serif font. More font options are coming soon!" },
+    { question: "What file format is the icon?", answer: "Icons are downloaded as PNG files with transparency support." },
+  ];
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "App Icon Creator - Utility Master",
+    "applicationCategory": "DesignApplication",
+    "description": "Create beautiful app icons instantly with custom colors and text. Free app icon generator.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
-        </div>
-      </header>
+    <PageLayout
+      title="App Icon Creator"
+      description="Create beautiful app icons instantly"
+    >
+      <SEOHead
+        title="App Icon Creator - Free Icon Generator | Utility Master"
+        description="Create beautiful app icons instantly with custom colors and text. Free app icon generator - no design skills required."
+        keywords="app icon creator, icon generator, app icon maker, free icon creator, logo maker"
+        canonicalUrl="https://utilitymaster.app/app-icon-creator"
+        structuredData={structuredData}
+      />
 
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <AdBanner />
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            App Icon Creator
-          </h1>
-          <p className="text-muted-foreground">Create beautiful app icons instantly</p>
-        </div>
+      <AdBanner />
 
+      <div className="max-w-4xl mx-auto space-y-6">
         <div className="grid md:grid-cols-2 gap-6">
           <Card className="border-border">
             <CardHeader>
@@ -155,8 +166,10 @@ const AppIconCreator = () => {
         </div>
 
         <canvas ref={canvasRef} className="hidden" />
-      </main>
-    </div>
+
+        <FAQ items={faqItems} />
+      </div>
+    </PageLayout>
   );
 };
 

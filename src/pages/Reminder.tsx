@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
-import { Calendar, Clock, Trash2, Plus, ArrowLeft } from "lucide-react";
+import { Calendar, Clock, Trash2, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
 import { AdBanner } from "@/components/AdBanner";
+import { PageLayout } from "@/components/PageLayout";
+import { SEOHead } from "@/components/SEOHead";
+import { FAQ } from "@/components/FAQ";
 
-interface Reminder {
+interface ReminderItem {
   id: string;
   title: string;
   date: string;
@@ -17,7 +19,7 @@ interface Reminder {
 
 const Reminder = () => {
   const { toast } = useToast();
-  const [reminders, setReminders] = useState<Reminder[]>([]);
+  const [reminders, setReminders] = useState<ReminderItem[]>([]);
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -36,7 +38,7 @@ const Reminder = () => {
       return;
     }
 
-    const newReminder: Reminder = {
+    const newReminder: ReminderItem = {
       id: Date.now().toString(),
       title,
       date,
@@ -60,27 +62,38 @@ const Reminder = () => {
     toast({ title: "Reminder deleted" });
   };
 
+  const faqItems = [
+    { question: "Are reminders saved locally?", answer: "Yes, all reminders are saved in your browser's local storage and persist across sessions." },
+    { question: "Will I get notifications?", answer: "Currently, the app stores reminders for your reference. Browser notification support is coming soon." },
+    { question: "Can I edit a reminder?", answer: "To edit a reminder, delete the existing one and create a new one with the updated information." },
+  ];
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Reminder App - Utility Master",
+    "applicationCategory": "UtilitiesApplication",
+    "description": "Never miss important tasks with our free reminder app. Set reminders with date and time.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
-        </div>
-      </header>
+    <PageLayout
+      title="Reminder App"
+      description="Never miss important tasks"
+    >
+      <SEOHead
+        title="Reminder App - Task Reminders | Utility Master"
+        description="Never miss important tasks with our free reminder app. Set reminders with custom date and time - no sign up required."
+        keywords="reminder app, task reminders, schedule reminders, free reminder, to-do list"
+        canonicalUrl="https://utilitymaster.app/reminder"
+        structuredData={structuredData}
+      />
 
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
-        <AdBanner />
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Reminder App
-          </h1>
-          <p className="text-muted-foreground">Never miss important tasks</p>
-        </div>
+      <AdBanner />
 
-        <Card className="mb-6 border-border">
+      <div className="max-w-4xl mx-auto space-y-6">
+        <Card className="border-border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Plus className="h-5 w-5" />
@@ -161,8 +174,10 @@ const Reminder = () => {
             ))
           )}
         </div>
-      </main>
-    </div>
+
+        <FAQ items={faqItems} />
+      </div>
+    </PageLayout>
   );
 };
 

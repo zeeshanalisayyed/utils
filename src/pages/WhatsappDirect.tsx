@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { ArrowLeft, MessageCircle, Send } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Send } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { AdBanner } from "@/components/AdBanner";
+import { PageLayout } from "@/components/PageLayout";
+import { SEOHead } from "@/components/SEOHead";
+import { FAQ } from "@/components/FAQ";
 
 const WhatsappDirect = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -15,7 +17,6 @@ const WhatsappDirect = () => {
   const { toast } = useToast();
 
   const sendMessage = () => {
-    // Remove all non-numeric characters
     const cleanNumber = phoneNumber.replace(/\D/g, "");
 
     if (cleanNumber.length < 10) {
@@ -27,7 +28,6 @@ const WhatsappDirect = () => {
       return;
     }
 
-    // Add country code if not present
     let formattedNumber = cleanNumber;
     if (!cleanNumber.startsWith("91") && cleanNumber.length === 10) {
       formattedNumber = "91" + cleanNumber;
@@ -44,29 +44,37 @@ const WhatsappDirect = () => {
     });
   };
 
-  return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link to="/">
-              <Button variant="ghost" size="icon" className="rounded-xl">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-[#25D366] to-[#128C7E] flex items-center justify-center">
-              <MessageCircle className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">WhatsApp Direct</h1>
-              <p className="text-xs text-muted-foreground">Message without saving contact</p>
-            </div>
-          </div>
-        </div>
-      </header>
+  const faqItems = [
+    { question: "Do I need to save the contact first?", answer: "No! That's the beauty of this tool. You can message anyone directly without adding them to your contacts." },
+    { question: "Which countries are supported?", answer: "All countries are supported. For Indian numbers, just enter 10 digits. For other countries, include the country code." },
+    { question: "Does this work on desktop?", answer: "Yes, it works on both mobile and desktop. On desktop, it will open WhatsApp Web or the desktop app." },
+  ];
 
-      <main className="container mx-auto px-4 py-8 max-w-2xl">
-        <AdBanner />
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "WhatsApp Direct - Utility Master",
+    "applicationCategory": "UtilitiesApplication",
+    "description": "Send WhatsApp messages without saving the contact. Free WhatsApp direct message tool.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  };
+
+  return (
+    <PageLayout
+      title="WhatsApp Direct"
+      description="Message without saving contact"
+    >
+      <SEOHead
+        title="WhatsApp Direct - Message Without Saving | Utility Master"
+        description="Send WhatsApp messages to any number without saving the contact. Free WhatsApp direct message tool - works on mobile and desktop."
+        keywords="whatsapp direct, whatsapp without saving, message without contact, whatsapp tool"
+        canonicalUrl="https://utilitymaster.app/whatsapp-direct"
+        structuredData={structuredData}
+      />
+
+      <AdBanner />
+
+      <div className="max-w-2xl mx-auto space-y-6">
         <Card className="p-6 border-border bg-card">
           <div className="mb-6">
             <h2 className="text-xl font-semibold text-foreground mb-2">Send Message</h2>
@@ -131,8 +139,10 @@ const WhatsappDirect = () => {
             </ul>
           </div>
         </Card>
-      </main>
-    </div>
+
+        <FAQ items={faqItems} />
+      </div>
+    </PageLayout>
   );
 };
 
