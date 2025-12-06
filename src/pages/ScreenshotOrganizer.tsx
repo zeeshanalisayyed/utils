@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { FolderOpen, Upload, ArrowLeft, AlertCircle } from "lucide-react";
+import { FolderOpen, Upload, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
 import { AdBanner } from "@/components/AdBanner";
+import { PageLayout } from "@/components/PageLayout";
+import { SEOHead } from "@/components/SEOHead";
+import { FAQ } from "@/components/FAQ";
 
 const ScreenshotOrganizer = () => {
   const { toast } = useToast();
@@ -79,34 +81,45 @@ const ScreenshotOrganizer = () => {
     { name: "Other", color: "from-gray-500 to-gray-600" },
   ];
 
+  const faqItems = [
+    { question: "How does the AI categorize screenshots?", answer: "Our AI analyzes visual elements, logos, and UI patterns to identify which app or platform the screenshot belongs to." },
+    { question: "What categories are supported?", answer: "Currently, we support Facebook, Instagram, WhatsApp, Twitter/X, LinkedIn, and a general 'Other' category." },
+    { question: "Is my data private?", answer: "Yes, screenshots are processed securely and not stored on our servers after analysis." },
+  ];
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Screenshot Organizer - Utility Master",
+    "applicationCategory": "UtilitiesApplication",
+    "description": "Automatically categorize your screenshots using AI. Organize screenshots by social media platform.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-            Back to Home
-          </Link>
-        </div>
-      </header>
+    <PageLayout
+      title="Screenshot Organizer"
+      description="Automatically categorize your screenshots"
+    >
+      <SEOHead
+        title="Screenshot Organizer - AI Screenshot Categorizer | Utility Master"
+        description="Automatically categorize your screenshots using AI. Organize screenshots by social media platform - Facebook, Instagram, WhatsApp, and more."
+        keywords="screenshot organizer, categorize screenshots, AI screenshot, organize images, screenshot manager"
+        canonicalUrl="https://utilitymaster.app/screenshot-organizer"
+        structuredData={structuredData}
+      />
 
-      <main className="container mx-auto px-4 py-8 max-w-6xl">
-        <AdBanner />
-        <div className="mb-8 text-center">
-          <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Screenshot Organizer
-          </h1>
-          <p className="text-muted-foreground">Automatically categorize your screenshots</p>
-        </div>
+      <AdBanner />
 
-        <Alert className="mb-6 border-primary/20 bg-primary/5">
+      <div className="max-w-6xl mx-auto space-y-6">
+        <Alert className="border-primary/20 bg-primary/5">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
             Advanced categorization requires image analysis. Upload interface ready for backend integration.
           </AlertDescription>
         </Alert>
 
-        <Card className="mb-6 border-border">
+        <Card className="border-border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Upload className="h-5 w-5" />
@@ -141,7 +154,7 @@ const ScreenshotOrganizer = () => {
         </Card>
 
         {organized.length > 0 && (
-          <Card className="mb-6 border-border">
+          <Card className="border-border">
             <CardHeader>
               <CardTitle>Organized Results</CardTitle>
             </CardHeader>
@@ -172,8 +185,10 @@ const ScreenshotOrganizer = () => {
             </Card>
           ))}
         </div>
-      </main>
-    </div>
+
+        <FAQ items={faqItems} />
+      </div>
+    </PageLayout>
   );
 };
 

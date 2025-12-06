@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { ArrowLeft, Activity } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { AdBanner } from "@/components/AdBanner";
+import { PageLayout } from "@/components/PageLayout";
+import { SEOHead } from "@/components/SEOHead";
+import { FAQ } from "@/components/FAQ";
 
 const BmiCalculator = () => {
   const [weight, setWeight] = useState("70");
@@ -13,7 +13,7 @@ const BmiCalculator = () => {
 
   const calculateBMI = (): { bmi: string; category: string; categoryColor: string } => {
     const w = parseFloat(weight);
-    const h = parseFloat(height) / 100; // Convert cm to meters
+    const h = parseFloat(height) / 100;
     
     if (isNaN(w) || isNaN(h) || w <= 0 || h <= 0) {
       return { bmi: "0", category: "", categoryColor: "primary" };
@@ -42,29 +42,37 @@ const BmiCalculator = () => {
 
   const result = calculateBMI();
 
-  return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Link to="/">
-              <Button variant="ghost" size="icon" className="rounded-xl">
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-accent to-primary flex items-center justify-center">
-              <Activity className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">BMI Calculator</h1>
-              <p className="text-xs text-muted-foreground">Check your Body Mass Index</p>
-            </div>
-          </div>
-        </div>
-      </header>
+  const faqItems = [
+    { question: "What is BMI?", answer: "Body Mass Index (BMI) is a measure of body fat based on height and weight that applies to adult men and women." },
+    { question: "How accurate is BMI?", answer: "BMI is a useful general indicator but doesn't account for muscle mass, bone density, or fat distribution. Athletes may have high BMI due to muscle mass." },
+    { question: "What is a healthy BMI range?", answer: "A healthy BMI is typically between 18.5 and 24.9. However, consult a healthcare provider for personalized advice." },
+  ];
 
-      <main className="container mx-auto px-4 py-8 max-w-2xl">
-        <AdBanner />
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "BMI Calculator - Utility Master",
+    "applicationCategory": "HealthApplication",
+    "description": "Calculate your Body Mass Index (BMI) to understand your weight status relative to your height.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  };
+
+  return (
+    <PageLayout
+      title="BMI Calculator"
+      description="Check your Body Mass Index"
+    >
+      <SEOHead
+        title="BMI Calculator - Body Mass Index Calculator | Utility Master"
+        description="Calculate your Body Mass Index (BMI) instantly. Free online BMI calculator with health categories and personalized recommendations."
+        keywords="BMI calculator, body mass index, weight calculator, health calculator, BMI chart"
+        canonicalUrl="https://utilitymaster.app/bmi-calculator"
+        structuredData={structuredData}
+      />
+
+      <AdBanner />
+
+      <div className="max-w-2xl mx-auto space-y-6">
         <Card className="p-6 border-border bg-card">
           <h2 className="text-xl font-semibold mb-6 text-foreground">Enter Your Details</h2>
           <div className="space-y-6">
@@ -99,7 +107,7 @@ const BmiCalculator = () => {
         </Card>
 
         {parseFloat(result.bmi) > 0 && (
-          <Card className="mt-6 p-6 border-border bg-gradient-to-br from-primary/5 to-accent/5">
+          <Card className="p-6 border-border bg-gradient-to-br from-primary/5 to-accent/5">
             <h2 className="text-xl font-semibold mb-6 text-foreground text-center">Your BMI</h2>
             <div className="text-center mb-6">
               <div className="text-6xl font-bold text-primary mb-2">{result.bmi}</div>
@@ -133,8 +141,10 @@ const BmiCalculator = () => {
             </div>
           </Card>
         )}
-      </main>
-    </div>
+
+        <FAQ items={faqItems} />
+      </div>
+    </PageLayout>
   );
 };
 
