@@ -31,6 +31,9 @@ const VideoDownloader = () => {
     if (videoUrl.includes("facebook.com")) return "Facebook";
     if (videoUrl.includes("twitter.com") || videoUrl.includes("x.com")) return "Twitter/X";
     if (videoUrl.includes("tiktok.com")) return "TikTok";
+    if (videoUrl.includes("pinterest.com") || videoUrl.includes("pin.it")) return "Pinterest";
+    if (videoUrl.includes("vimeo.com")) return "Vimeo";
+    if (videoUrl.includes("dailymotion.com") || videoUrl.includes("dai.ly")) return "Dailymotion";
     if (videoUrl.includes("linkedin.com")) return "LinkedIn";
     if (videoUrl.includes("threads.net")) return "Threads";
     return "Unknown";
@@ -106,9 +109,9 @@ const VideoDownloader = () => {
             </div>
             <div className="bg-muted/50 rounded-lg p-4 space-y-2">
               <p className="text-sm font-medium">Supported Platforms:</p>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm text-muted-foreground">
-                <span>• YouTube</span><span>• Instagram</span><span>• Facebook</span>
-                <span>• Twitter/X</span><span>• TikTok</span><span>• And more...</span>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-muted-foreground">
+                <span>• YouTube</span><span>• Instagram</span><span>• Facebook</span><span>• Twitter/X</span>
+                <span>• TikTok</span><span>• Pinterest</span><span>• Vimeo</span><span>• Dailymotion</span>
               </div>
             </div>
             <Button className="w-full" onClick={handleDownload} disabled={!url || isDownloading}>

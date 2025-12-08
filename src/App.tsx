@@ -22,6 +22,12 @@ import Mp3Cutter from "./pages/Mp3Cutter";
 import ScreenRecorder from "./pages/ScreenRecorder";
 import ImageToText from "./pages/ImageToText";
 import VideoConverter from "./pages/VideoConverter";
+import QrCodeGenerator from "./pages/QrCodeGenerator";
+import ColorPicker from "./pages/ColorPicker";
+import PasswordGenerator from "./pages/PasswordGenerator";
+import StopwatchTimer from "./pages/StopwatchTimer";
+import AgeCalculator from "./pages/AgeCalculator";
+import LoanCalculator from "./pages/LoanCalculator";
 import AboutUs from "./pages/AboutUs";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
@@ -56,11 +62,16 @@ const App = () => (
           <Route path="/screen-recorder" element={<ScreenRecorder />} />
           <Route path="/image-to-text" element={<ImageToText />} />
           <Route path="/video-converter" element={<VideoConverter />} />
+          <Route path="/qr-code-generator" element={<QrCodeGenerator />} />
+          <Route path="/color-picker" element={<ColorPicker />} />
+          <Route path="/password-generator" element={<PasswordGenerator />} />
+          <Route path="/stopwatch-timer" element={<StopwatchTimer />} />
+          <Route path="/age-calculator" element={<AgeCalculator />} />
+          <Route path="/loan-calculator" element={<LoanCalculator />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/blog" element={<Blog />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
