@@ -44,6 +44,12 @@ Deno.serve(async (req) => {
       platform = 'twitter';
     } else if (url.includes('tiktok.com')) {
       platform = 'tiktok';
+    } else if (url.includes('pinterest.com') || url.includes('pin.it')) {
+      platform = 'pinterest';
+    } else if (url.includes('vimeo.com')) {
+      platform = 'vimeo';
+    } else if (url.includes('dailymotion.com') || url.includes('dai.ly')) {
+      platform = 'dailymotion';
     }
 
     console.log(`Video download requested for ${platform}: ${url}`);
@@ -66,10 +72,19 @@ Deno.serve(async (req) => {
       case 'tiktok':
         videoInfo = await downloadTikTok(url);
         break;
+      case 'pinterest':
+        videoInfo = await downloadPinterest(url);
+        break;
+      case 'vimeo':
+        videoInfo = await downloadVimeo(url);
+        break;
+      case 'dailymotion':
+        videoInfo = await downloadDailymotion(url);
+        break;
       default:
         videoInfo = {
           platform: 'unknown',
-          error: 'Unsupported platform. Supported: YouTube, Instagram, Facebook, Twitter, TikTok'
+          error: 'Unsupported platform. Supported: YouTube, Instagram, Facebook, Twitter, TikTok, Pinterest, Vimeo, Dailymotion'
         };
     }
 
@@ -226,7 +241,6 @@ async function downloadTwitter(url: string): Promise<VideoInfo> {
 
 async function downloadTikTok(url: string): Promise<VideoInfo> {
   try {
-    // Using RapidAPI's TikTok Downloader
     const response = await fetch('https://tiktok-video-no-watermark2.p.rapidapi.com/', {
       method: 'POST',
       headers: {
@@ -254,6 +268,101 @@ async function downloadTikTok(url: string): Promise<VideoInfo> {
     return {
       platform: 'tiktok',
       error: 'Failed to fetch TikTok video. Please ensure RAPIDAPI_KEY is configured correctly in Secrets.'
+    };
+  }
+}
+
+async function downloadPinterest(url: string): Promise<VideoInfo> {
+  try {
+    const response = await fetch('https://pinterest-video-and-image-downloader.p.rapidapi.com/pinterest?url=' + encodeURIComponent(url), {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': RAPIDAPI_KEY,
+        'X-RapidAPI-Host': 'pinterest-video-and-image-downloader.p.rapidapi.com'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    return {
+      platform: 'pinterest',
+      title: data.title || 'Pinterest Video',
+      downloadUrl: data.video_url || data.data?.video_url,
+      thumbnail: data.thumbnail || data.data?.thumbnail
+    };
+  } catch (error) {
+    console.error('Pinterest download error:', error);
+    return {
+      platform: 'pinterest',
+      error: 'Failed to fetch Pinterest video. Please ensure RAPIDAPI_KEY is configured correctly in Secrets.'
+    };
+  }
+}
+
+async function downloadVimeo(url: string): Promise<VideoInfo> {
+  try {
+    const response = await fetch('https://vimeo-downloader2.p.rapidapi.com/vimeo', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-RapidAPI-Key': RAPIDAPI_KEY,
+        'X-RapidAPI-Host': 'vimeo-downloader2.p.rapidapi.com'
+      },
+      body: JSON.stringify({ url })
+    });
+
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    return {
+      platform: 'vimeo',
+      title: data.title || 'Vimeo Video',
+      downloadUrl: data.video?.[0]?.url || data.download_url,
+      thumbnail: data.thumbnail
+    };
+  } catch (error) {
+    console.error('Vimeo download error:', error);
+    return {
+      platform: 'vimeo',
+      error: 'Failed to fetch Vimeo video. Please ensure RAPIDAPI_KEY is configured correctly in Secrets.'
+    };
+  }
+}
+
+async function downloadDailymotion(url: string): Promise<VideoInfo> {
+  try {
+    const response = await fetch('https://dailymotion-video-downloader1.p.rapidapi.com/download?url=' + encodeURIComponent(url), {
+      method: 'GET',
+      headers: {
+        'X-RapidAPI-Key': RAPIDAPI_KEY,
+        'X-RapidAPI-Host': 'dailymotion-video-downloader1.p.rapidapi.com'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    
+    return {
+      platform: 'dailymotion',
+      title: data.title || 'Dailymotion Video',
+      downloadUrl: data.download_url || data.video_url,
+      thumbnail: data.thumbnail
+    };
+  } catch (error) {
+    console.error('Dailymotion download error:', error);
+    return {
+      platform: 'dailymotion',
+      error: 'Failed to fetch Dailymotion video. Please ensure RAPIDAPI_KEY is configured correctly in Secrets.'
     };
   }
 }
