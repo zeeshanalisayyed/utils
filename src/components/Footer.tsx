@@ -15,7 +15,7 @@ export function Footer() {
               <span className="font-bold font-display gradient-text">Utility Master</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Your complete digital utility suite with 18+ free tools for productivity, calculations, and media processing.
+              Your complete digital utility suite with 24+ free tools for productivity, calculations, and media processing.
             </p>
           </div>
 
