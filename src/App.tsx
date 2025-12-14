@@ -33,6 +33,36 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
+import TextCaseConverter from "./pages/TextCaseConverter";
+import WordCounter from "./pages/WordCounter";
+import LoremIpsumGenerator from "./pages/LoremIpsumGenerator";
+import MarkdownEditor from "./pages/MarkdownEditor";
+import TextDiffChecker from "./pages/TextDiffChecker";
+import Base64Encoder from "./pages/Base64Encoder";
+import UrlEncoder from "./pages/UrlEncoder";
+import TextToSpeech from "./pages/TextToSpeech";
+import SpeechToText from "./pages/SpeechToText";
+import HashGenerator from "./pages/HashGenerator";
+import JsonFormatter from "./pages/JsonFormatter";
+import RegexTester from "./pages/RegexTester";
+import UuidGenerator from "./pages/UuidGenerator";
+import CssGradientGenerator from "./pages/CssGradientGenerator";
+import GstCalculator from "./pages/GstCalculator";
+import TipCalculator from "./pages/TipCalculator";
+import CompoundInterestCalculator from "./pages/CompoundInterestCalculator";
+import RoiCalculator from "./pages/RoiCalculator";
+import PomodoroTimer from "./pages/PomodoroTimer";
+import RandomNumberGenerator from "./pages/RandomNumberGenerator";
+import PercentageCalculator from "./pages/PercentageCalculator";
+import EmailValidator from "./pages/EmailValidator";
+import PasswordStrengthChecker from "./pages/PasswordStrengthChecker";
+import RomanNumeralConverter from "./pages/RomanNumeralConverter";
+import TimeZoneConverter from "./pages/TimeZoneConverter";
+import DateCalculator from "./pages/DateCalculator";
+import DiceRoller from "./pages/DiceRoller";
+import CoinFlipper from "./pages/CoinFlipper";
+import CsvToJsonConverter from "./pages/CsvToJsonConverter";
+import ImageCompressor from "./pages/ImageCompressor";
 
 const queryClient = new QueryClient();
 
@@ -72,6 +102,36 @@ const App = () => (
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/text-case-converter" element={<TextCaseConverter />} />
+          <Route path="/word-counter" element={<WordCounter />} />
+          <Route path="/lorem-ipsum-generator" element={<LoremIpsumGenerator />} />
+          <Route path="/markdown-editor" element={<MarkdownEditor />} />
+          <Route path="/text-diff-checker" element={<TextDiffChecker />} />
+          <Route path="/base64-encoder" element={<Base64Encoder />} />
+          <Route path="/url-encoder" element={<UrlEncoder />} />
+          <Route path="/text-to-speech" element={<TextToSpeech />} />
+          <Route path="/speech-to-text" element={<SpeechToText />} />
+          <Route path="/hash-generator" element={<HashGenerator />} />
+          <Route path="/json-formatter" element={<JsonFormatter />} />
+          <Route path="/regex-tester" element={<RegexTester />} />
+          <Route path="/uuid-generator" element={<UuidGenerator />} />
+          <Route path="/css-gradient-generator" element={<CssGradientGenerator />} />
+          <Route path="/gst-calculator" element={<GstCalculator />} />
+          <Route path="/tip-calculator" element={<TipCalculator />} />
+          <Route path="/compound-interest-calculator" element={<CompoundInterestCalculator />} />
+          <Route path="/roi-calculator" element={<RoiCalculator />} />
+          <Route path="/pomodoro-timer" element={<PomodoroTimer />} />
+          <Route path="/random-number-generator" element={<RandomNumberGenerator />} />
+          <Route path="/percentage-calculator" element={<PercentageCalculator />} />
+          <Route path="/email-validator" element={<EmailValidator />} />
+          <Route path="/password-strength-checker" element={<PasswordStrengthChecker />} />
+          <Route path="/roman-numeral-converter" element={<RomanNumeralConverter />} />
+          <Route path="/time-zone-converter" element={<TimeZoneConverter />} />
+          <Route path="/date-calculator" element={<DateCalculator />} />
+          <Route path="/dice-roller" element={<DiceRoller />} />
+          <Route path="/coin-flipper" element={<CoinFlipper />} />
+          <Route path="/csv-to-json-converter" element={<CsvToJsonConverter />} />
+          <Route path="/image-compressor" element={<ImageCompressor />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

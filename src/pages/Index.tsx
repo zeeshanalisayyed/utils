@@ -1,4 +1,4 @@
-import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe } from "lucide-react";
+import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer } from "lucide-react";
 import { AdBanner } from "@/components/AdBanner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -29,6 +29,36 @@ const utilities = [
   { title: "Screen Recorder", description: "Record your screen with audio", icon: Video, path: "/screen-recorder", gradient: "from-accent to-primary-glow" },
   { title: "Image to Text", description: "Extract text from images", icon: ScanText, path: "/image-to-text", gradient: "from-primary to-accent" },
   { title: "Video Converter", description: "Convert video formats easily", icon: RefreshCw, path: "/video-converter", gradient: "from-primary-glow to-primary" },
+  { title: "Text Case Converter", description: "Convert text between case formats", icon: Type, path: "/text-case-converter", gradient: "from-accent to-primary" },
+  { title: "Word Counter", description: "Count words, characters, and more", icon: BarChart3, path: "/word-counter", gradient: "from-primary to-accent" },
+  { title: "Lorem Ipsum Generator", description: "Generate placeholder text", icon: FileText, path: "/lorem-ipsum-generator", gradient: "from-primary-glow to-accent" },
+  { title: "Markdown Editor", description: "Edit Markdown with live preview", icon: FileText, path: "/markdown-editor", gradient: "from-accent to-primary-glow" },
+  { title: "Text Diff Checker", description: "Compare two texts and find differences", icon: GitCompare, path: "/text-diff-checker", gradient: "from-primary to-primary-glow" },
+  { title: "Base64 Encoder", description: "Encode and decode Base64", icon: Code, path: "/base64-encoder", gradient: "from-accent to-primary" },
+  { title: "URL Encoder", description: "Encode and decode URLs", icon: Link, path: "/url-encoder", gradient: "from-primary-glow to-accent" },
+  { title: "Text to Speech", description: "Convert text to spoken audio", icon: Volume2, path: "/text-to-speech", gradient: "from-accent to-primary-glow" },
+  { title: "Speech to Text", description: "Convert speech to text", icon: Mic, path: "/speech-to-text", gradient: "from-primary to-accent" },
+  { title: "Hash Generator", description: "Generate cryptographic hashes", icon: Hash, path: "/hash-generator", gradient: "from-primary-glow to-primary" },
+  { title: "JSON Formatter", description: "Format, minify, and validate JSON", icon: Code, path: "/json-formatter", gradient: "from-accent to-primary" },
+  { title: "Regex Tester", description: "Test and debug regular expressions", icon: Search, path: "/regex-tester", gradient: "from-primary to-primary-glow" },
+  { title: "UUID Generator", description: "Generate unique identifiers", icon: Hash, path: "/uuid-generator", gradient: "from-accent to-primary-glow" },
+  { title: "CSS Gradient Generator", description: "Generate beautiful CSS gradients", icon: Palette, path: "/css-gradient-generator", gradient: "from-primary-glow to-accent" },
+  { title: "GST Calculator", description: "Calculate GST for Indian users", icon: Calculator, path: "/gst-calculator", gradient: "from-accent to-primary" },
+  { title: "Tip Calculator", description: "Calculate tips and split bills", icon: Calculator, path: "/tip-calculator", gradient: "from-primary to-accent" },
+  { title: "Compound Interest", description: "Calculate compound interest returns", icon: TrendingUp, path: "/compound-interest-calculator", gradient: "from-primary-glow to-accent" },
+  { title: "ROI Calculator", description: "Calculate return on investment", icon: TrendingUp, path: "/roi-calculator", gradient: "from-accent to-primary-glow" },
+  { title: "Pomodoro Timer", description: "Focus timer with breaks", icon: Timer, path: "/pomodoro-timer", gradient: "from-primary to-primary-glow" },
+  { title: "Random Number Generator", description: "Generate random numbers", icon: Dice6, path: "/random-number-generator", gradient: "from-accent to-primary" },
+  { title: "Percentage Calculator", description: "Calculate percentages", icon: Calculator, path: "/percentage-calculator", gradient: "from-primary-glow to-accent" },
+  { title: "Email Validator", description: "Validate email addresses", icon: Mail, path: "/email-validator", gradient: "from-accent to-primary-glow" },
+  { title: "Password Strength", description: "Check password strength", icon: Shield, path: "/password-strength-checker", gradient: "from-primary to-accent" },
+  { title: "Roman Numeral Converter", description: "Convert Roman and Arabic numerals", icon: Hash, path: "/roman-numeral-converter", gradient: "from-primary-glow to-primary" },
+  { title: "Time Zone Converter", description: "Convert times between zones", icon: Clock, path: "/time-zone-converter", gradient: "from-accent to-primary" },
+  { title: "Date Calculator", description: "Calculate days between dates", icon: Calendar, path: "/date-calculator", gradient: "from-primary to-primary-glow" },
+  { title: "Dice Roller", description: "Roll virtual dice", icon: Dice6, path: "/dice-roller", gradient: "from-accent to-primary-glow" },
+  { title: "Coin Flipper", description: "Flip a virtual coin", icon: Coins, path: "/coin-flipper", gradient: "from-primary-glow to-accent" },
+  { title: "CSV to JSON", description: "Convert CSV and JSON formats", icon: FileText, path: "/csv-to-json-converter", gradient: "from-accent to-primary" },
+  { title: "Image Compressor", description: "Compress images to reduce size", icon: Image, path: "/image-compressor", gradient: "from-primary to-accent" },
 ];
 
 const features = [
@@ -51,7 +81,7 @@ const Index = () => {
             <div className="max-w-4xl mx-auto text-center">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6 animate-fade-in">
                 <Sparkles className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium text-primary">24+ Free Utilities</span>
+                <span className="text-sm font-medium text-primary">50+ Free Utilities</span>
               </div>
               
               <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 animate-fade-in-up text-balance">
