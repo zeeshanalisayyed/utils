@@ -26,7 +26,7 @@ export function Header() {
               <h1 className="text-lg font-bold font-display gradient-text">
                 Utility Master
               </h1>
-              <p className="text-[10px] text-muted-foreground -mt-0.5">18+ Free Tools</p>
+              <p className="text-[10px] text-muted-foreground -mt-0.5">24+ Free Tools</p>
             </div>
           </Link>
 
