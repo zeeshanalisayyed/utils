@@ -1,8 +1,10 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { ArrowLeft, Home } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { RelatedTools, getRelatedTools } from "./RelatedTools";
+import { useToolTracking } from "./EngagementBanner";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -12,6 +14,12 @@ interface PageLayoutProps {
 }
 
 export function PageLayout({ children, title, description, showBackButton = true }: PageLayoutProps) {
+  const location = useLocation();
+  const relatedTools = getRelatedTools(location.pathname);
+  
+  // Track tool usage for engagement
+  useToolTracking(location.pathname);
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
@@ -23,9 +31,9 @@ export function PageLayout({ children, title, description, showBackButton = true
             {showBackButton && (
               <Link
                 to="/"
-                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors"
+                className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-4 transition-colors group"
               >
-                <ArrowLeft className="h-4 w-4" />
+                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-0.5 transition-transform" />
                 Back to Tools
               </Link>
             )}
@@ -41,6 +49,24 @@ export function PageLayout({ children, title, description, showBackButton = true
         {/* Page Content */}
         <div className="container mx-auto px-4 py-8">
           {children}
+          
+          {/* Related Tools Section */}
+          {relatedTools.length > 0 && (
+            <div className="mt-8">
+              <RelatedTools tools={relatedTools} />
+            </div>
+          )}
+          
+          {/* Explore More CTA */}
+          <div className="mt-8 text-center">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl font-medium transition-all hover:scale-105"
+            >
+              <Home className="h-4 w-4" />
+              Explore 50+ More Tools
+            </Link>
+          </div>
         </div>
       </main>
 

@@ -5,6 +5,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ToolCard } from "@/components/ToolCard";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { QuickStart } from "@/components/QuickStart";
+import { EngagementBanner } from "@/components/EngagementBanner";
 
 // Define categories
 export type Category = "all" | "financial" | "text" | "media" | "developer" | "converters" | "time" | "productivity" | "design" | "random" | "system";
@@ -178,7 +180,19 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Quick Start Section */}
+        <section className="py-8">
+          <div className="container mx-auto px-4">
+            <QuickStart />
+          </div>
+        </section>
+
         <AdBanner slot="top-banner" format="auto" />
+
+        {/* Engagement Banner */}
+        <section className="container mx-auto px-4">
+          <EngagementBanner />
+        </section>
 
         {/* Tools Grid */}
         <section id="tools" className="py-16">
