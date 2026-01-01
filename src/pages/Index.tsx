@@ -1,6 +1,6 @@
 import React from "react";
 import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers } from "lucide-react";
-import { AdBanner } from "@/components/AdBanner";
+import { AdBanner, InArticleAd, FooterAd } from "@/components/AdBanner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ToolCard } from "@/components/ToolCard";
@@ -187,12 +187,20 @@ const Index = () => {
           </div>
         </section>
 
-        <AdBanner slot="top-banner" format="auto" />
+        {/* Ad after Quick Start */}
+        <div className="container mx-auto px-4 py-4">
+          <AdBanner format="horizontal" />
+        </div>
 
         {/* Engagement Banner */}
         <section className="container mx-auto px-4">
           <EngagementBanner />
         </section>
+
+        {/* Ad before Tools Grid */}
+        <div className="container mx-auto px-4 py-4">
+          <InArticleAd />
+        </div>
 
         {/* Tools Grid */}
         <section id="tools" className="py-16">
@@ -242,7 +250,15 @@ const Index = () => {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                   {filteredUtilities.map((utility, index) => (
-                    <ToolCard key={utility.path} {...utility} index={index} />
+                    <React.Fragment key={utility.path}>
+                      <ToolCard {...utility} index={index} />
+                      {/* Insert ad after every 9 tools */}
+                      {(index + 1) % 9 === 0 && index < filteredUtilities.length - 1 && (
+                        <div className="col-span-1 sm:col-span-2 lg:col-span-3">
+                          <InArticleAd />
+                        </div>
+                      )}
+                    </React.Fragment>
                   ))}
                 </div>
                 {filteredUtilities.length === 0 && (
@@ -255,7 +271,10 @@ const Index = () => {
           </div>
         </section>
 
-        <AdBanner slot="bottom-banner" format="auto" />
+        {/* Ad before CTA */}
+        <div className="container mx-auto px-4 py-4">
+          <AdBanner format="horizontal" />
+        </div>
 
         {/* CTA Section */}
         <section className="py-16 bg-muted/30">
@@ -273,6 +292,9 @@ const Index = () => {
             </div>
           </div>
         </section>
+        
+        {/* Footer Ad */}
+        <FooterAd />
       </main>
 
       <Footer />

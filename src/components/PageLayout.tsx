@@ -5,6 +5,7 @@ import { ArrowLeft, Home } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { RelatedTools, getRelatedTools } from "./RelatedTools";
 import { useToolTracking } from "./EngagementBanner";
+import { AdBanner, InArticleAd, FooterAd } from "./AdBanner";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -23,6 +24,11 @@ export function PageLayout({ children, title, description, showBackButton = true
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
+      
+      {/* Top Banner Ad */}
+      <div className="container mx-auto px-4 pt-4">
+        <AdBanner format="horizontal" className="mb-0" />
+      </div>
       
       <main className="flex-1">
         {/* Page Header */}
@@ -50,12 +56,18 @@ export function PageLayout({ children, title, description, showBackButton = true
         <div className="container mx-auto px-4 py-8">
           {children}
           
+          {/* Mid-content Ad */}
+          <InArticleAd className="my-8" />
+          
           {/* Related Tools Section */}
           {relatedTools.length > 0 && (
             <div className="mt-8">
               <RelatedTools tools={relatedTools} />
             </div>
           )}
+          
+          {/* Ad before CTA */}
+          <AdBanner format="auto" className="my-6" />
           
           {/* Explore More CTA */}
           <div className="mt-8 text-center">
@@ -70,6 +82,9 @@ export function PageLayout({ children, title, description, showBackButton = true
         </div>
       </main>
 
+      {/* Footer Ad */}
+      <FooterAd />
+      
       <Footer />
     </div>
   );
