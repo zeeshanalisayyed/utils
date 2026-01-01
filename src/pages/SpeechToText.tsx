@@ -14,20 +14,20 @@ const SpeechToText = () => {
   const [isListening, setIsListening] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
-  const recognitionRef = useState<SpeechRecognition | null>(null);
+  const [recognition, setRecognition] = useState<any>(null);
   const { toast } = useToast();
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      if (SpeechRecognition) {
+      const SpeechRecognitionAPI = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognitionAPI) {
         setIsSupported(true);
-        const recognition = new SpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = 'en-US';
+        const recognitionInstance = new SpeechRecognitionAPI();
+        recognitionInstance.continuous = true;
+        recognitionInstance.interimResults = true;
+        recognitionInstance.lang = 'en-US';
 
-        recognition.onresult = (event: SpeechRecognitionEvent) => {
+        recognitionInstance.onresult = (event: any) => {
           let interimTranscript = '';
           let finalTranscript = '';
 
@@ -53,26 +53,26 @@ const SpeechToText = () => {
           }
         };
 
-        recognition.onend = () => {
+        recognitionInstance.onend = () => {
           setIsListening(false);
         };
 
-        recognitionRef[0] = recognition;
+        setRecognition(recognitionInstance);
       }
     }
   }, []);
 
   const startListening = () => {
-    if (recognitionRef[0]) {
-      recognitionRef[0].start();
+    if (recognition) {
+      recognition.start();
       setIsListening(true);
       toast({ title: "Listening... Speak now" });
     }
   };
 
   const stopListening = () => {
-    if (recognitionRef[0]) {
-      recognitionRef[0].stop();
+    if (recognition) {
+      recognition.stop();
       setIsListening(false);
       toast({ title: "Stopped listening" });
     }

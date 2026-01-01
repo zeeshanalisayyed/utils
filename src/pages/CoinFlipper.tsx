@@ -15,9 +15,9 @@ const CoinFlipper = () => {
   const flip = () => {
     setFlipping(true);
     setTimeout(() => {
-      const flipResult = Math.random() < 0.5 ? "heads" : "tails";
+      const flipResult: "heads" | "tails" = Math.random() < 0.5 ? "heads" : "tails";
       setResult(flipResult);
-      setHistory(prev => [flipResult, ...prev].slice(0, 10));
+      setHistory(prev => [flipResult, ...prev].slice(0, 10) as Array<"heads" | "tails">);
       setFlipping(false);
     }, 500);
   };
