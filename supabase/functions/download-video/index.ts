@@ -200,36 +200,83 @@ async function downloadInstagram(url: string): Promise<VideoInfo> {
   try {
     console.log('Fetching Instagram video:', url);
     
-    const response = await fetch('https://instagram-downloader-download-instagram-videos-stories1.p.rapidapi.com/get-info-rapidapi', {
-      method: 'POST',
+    // Use the more reliable "Insta Api" from RapidAPI (instagram-story-downloader-media-downloader)
+    const response = await fetch(`https://instagram-story-downloader-media-downloader.p.rapidapi.com/index?url=${encodeURIComponent(url)}`, {
+      method: 'GET',
       headers: {
-        'Content-Type': 'application/json',
         'X-RapidAPI-Key': RAPIDAPI_KEY,
-        'X-RapidAPI-Host': 'instagram-downloader-download-instagram-videos-stories1.p.rapidapi.com'
-      },
-      body: JSON.stringify({ url })
+        'X-RapidAPI-Host': 'instagram-story-downloader-media-downloader.p.rapidapi.com'
+      }
     });
 
     console.log('Instagram API response status:', response.status);
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Instagram API error response:', errorText);
       throw new Error(`API request failed: ${response.status}`);
     }
 
     const data = await response.json();
     console.log('Instagram API data:', JSON.stringify(data, null, 2));
     
+    // Handle the unified API response format
+    if (!data.success) {
+      throw new Error(data.error?.message || 'Failed to process Instagram URL');
+    }
+
+    const formats: VideoFormat[] = [];
+    
+    // Handle different media types
+    if (data.media_type === 'video') {
+      const mediaUrl = data.data?.content?.media_url;
+      if (mediaUrl) {
+        formats.push({ quality: 'HD', url: mediaUrl, format: 'video/mp4' });
+      }
+      return {
+        platform: 'instagram',
+        title: data.data?.title || 'Instagram Video',
+        downloadUrl: mediaUrl,
+        thumbnail: data.data?.content?.thumbnail_url,
+        formats
+      };
+    } else if (data.media_type === 'sidecar') {
+      // Handle carousel posts
+      const items = data.data?.content?.items || [];
+      for (const item of items) {
+        if (item.type === 'video' && item.media_url) {
+          formats.push({ quality: 'HD', url: item.media_url, format: 'video/mp4' });
+        }
+      }
+      return {
+        platform: 'instagram',
+        title: data.data?.title || 'Instagram Carousel',
+        downloadUrl: formats[0]?.url,
+        thumbnail: data.data?.content?.cover_thumbnail,
+        formats
+      };
+    } else if (data.media_type === 'photo') {
+      return {
+        platform: 'instagram',
+        title: data.data?.title || 'Instagram Photo',
+        downloadUrl: data.data?.content?.media_url,
+        thumbnail: data.data?.content?.thumbnail_url,
+        error: 'This is a photo post, not a video. The image URL is provided for download.'
+      };
+    }
+
     return {
       platform: 'instagram',
-      title: data.title || 'Instagram Video',
-      downloadUrl: data.download_url || data.video_url || data.media?.[0]?.url,
-      thumbnail: data.thumbnail || data.cover
+      title: data.data?.title || 'Instagram Media',
+      downloadUrl: data.data?.content?.media_url,
+      thumbnail: data.data?.content?.thumbnail_url
     };
   } catch (error) {
     console.error('Instagram download error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return {
       platform: 'instagram',
-      error: 'Failed to fetch Instagram video. The video may be private or the API may be unavailable.'
+      error: `Failed to fetch Instagram video: ${errorMessage}. The video may be private or the content type is not supported.`
     };
   }
 }
