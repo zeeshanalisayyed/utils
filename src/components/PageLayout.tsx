@@ -54,6 +54,9 @@ export function PageLayout({ children, title, description, showBackButton = true
 
         {/* Page Content with Sidebar */}
         <div className="container mx-auto px-4 py-8">
+          {/* Full-width top ad before content */}
+          <AdBanner format="horizontal" className="mb-8" />
+          
           <div className="flex gap-8">
             {/* Main Content */}
             <div className="flex-1 min-w-0">
@@ -84,18 +87,20 @@ export function PageLayout({ children, title, description, showBackButton = true
               </div>
             </div>
             
-            {/* Sticky Sidebar Ad - Hidden on mobile */}
-            <aside className="hidden lg:block w-[300px] flex-shrink-0">
-              <div className="sticky top-20">
+            {/* Sticky Sidebar Ad - Hidden on mobile/tablet */}
+            <aside className="hidden xl:block w-[300px] flex-shrink-0">
+              <div className="sticky top-20 space-y-6">
                 <AdBanner 
                   format="rectangle" 
-                  className="mb-4"
                   style={{ minHeight: '250px' }}
                 />
                 <AdBanner 
                   format="rectangle" 
-                  className="mt-4"
                   style={{ minHeight: '250px' }}
+                />
+                <AdBanner 
+                  format="vertical" 
+                  style={{ minHeight: '600px' }}
                 />
               </div>
             </aside>
