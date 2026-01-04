@@ -52,32 +52,53 @@ export function PageLayout({ children, title, description, showBackButton = true
           </div>
         </div>
 
-        {/* Page Content */}
+        {/* Page Content with Sidebar */}
         <div className="container mx-auto px-4 py-8">
-          {children}
-          
-          {/* Mid-content Ad */}
-          <InArticleAd className="my-8" />
-          
-          {/* Related Tools Section */}
-          {relatedTools.length > 0 && (
-            <div className="mt-8">
-              <RelatedTools tools={relatedTools} />
+          <div className="flex gap-8">
+            {/* Main Content */}
+            <div className="flex-1 min-w-0">
+              {children}
+              
+              {/* Mid-content Ad */}
+              <InArticleAd className="my-8" />
+              
+              {/* Related Tools Section */}
+              {relatedTools.length > 0 && (
+                <div className="mt-8">
+                  <RelatedTools tools={relatedTools} />
+                </div>
+              )}
+              
+              {/* Ad before CTA */}
+              <AdBanner format="auto" className="my-6" />
+              
+              {/* Explore More CTA */}
+              <div className="mt-8 text-center">
+                <Link
+                  to="/"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl font-medium transition-all hover:scale-105"
+                >
+                  <Home className="h-4 w-4" />
+                  Explore 50+ More Tools
+                </Link>
+              </div>
             </div>
-          )}
-          
-          {/* Ad before CTA */}
-          <AdBanner format="auto" className="my-6" />
-          
-          {/* Explore More CTA */}
-          <div className="mt-8 text-center">
-            <Link
-              to="/"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl font-medium transition-all hover:scale-105"
-            >
-              <Home className="h-4 w-4" />
-              Explore 50+ More Tools
-            </Link>
+            
+            {/* Sticky Sidebar Ad - Hidden on mobile */}
+            <aside className="hidden lg:block w-[300px] flex-shrink-0">
+              <div className="sticky top-20">
+                <AdBanner 
+                  format="rectangle" 
+                  className="mb-4"
+                  style={{ minHeight: '250px' }}
+                />
+                <AdBanner 
+                  format="rectangle" 
+                  className="mt-4"
+                  style={{ minHeight: '250px' }}
+                />
+              </div>
+            </aside>
           </div>
         </div>
       </main>
