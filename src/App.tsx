@@ -3,6 +3,8 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { InterstitialAd } from "@/components/InterstitialAd";
+import { MobileStickyAd } from "@/components/MobileStickyAd";
 import Index from "./pages/Index";
 import SipCalculator from "./pages/SipCalculator";
 import IncomeTax from "./pages/IncomeTax";
@@ -72,6 +74,12 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        {/* Interstitial Ad - shows every 3rd tool page navigation */}
+        <InterstitialAd />
+        
+        {/* Mobile Sticky Bottom Ad */}
+        <MobileStickyAd />
+        
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/sip-calculator" element={<SipCalculator />} />
