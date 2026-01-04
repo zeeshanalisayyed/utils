@@ -1,6 +1,6 @@
 import React from "react";
 import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers } from "lucide-react";
-import { AdBanner, InArticleAd, FooterAd } from "@/components/AdBanner";
+import { AdBanner, InArticleAd, FooterAd, InFeedAd } from "@/components/AdBanner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ToolCard } from "@/components/ToolCard";
@@ -252,11 +252,9 @@ const Index = () => {
                   {filteredUtilities.map((utility, index) => (
                     <React.Fragment key={utility.path}>
                       <ToolCard {...utility} index={index} />
-                      {/* Insert ad after every 9 tools */}
-                      {(index + 1) % 9 === 0 && index < filteredUtilities.length - 1 && (
-                        <div className="col-span-1 sm:col-span-2 lg:col-span-3">
-                          <InArticleAd />
-                        </div>
+                      {/* Insert native in-feed ad after every 6 tools */}
+                      {(index + 1) % 6 === 0 && index < filteredUtilities.length - 1 && (
+                        <InFeedAd />
                       )}
                     </React.Fragment>
                   ))}

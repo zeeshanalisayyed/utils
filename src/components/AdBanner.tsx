@@ -99,3 +99,17 @@ export const FooterAd = ({ className = '' }: { className?: string }) => (
     </div>
   </div>
 );
+
+// Native in-feed ad that blends with tool cards
+export const InFeedAd = ({ className = '' }: { className?: string }) => (
+  <div className={`group relative overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:shadow-lg ${className}`}>
+    <div className="absolute top-2 right-2">
+      <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Sponsored</span>
+    </div>
+    <AdBanner 
+      format="fluid" 
+      responsive={true}
+      style={{ minHeight: '120px' }}
+    />
+  </div>
+);
