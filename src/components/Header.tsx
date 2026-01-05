@@ -1,4 +1,4 @@
-import { Calculator, Menu, X } from "lucide-react";
+import { Sparkles, Menu, X, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "./ui/button";
@@ -17,16 +17,20 @@ export function Header() {
     <header className="sticky top-0 z-50 glass-strong">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Logo - More engaging */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="h-10 w-10 rounded-xl gradient-bg flex items-center justify-center shadow-soft group-hover:shadow-glow transition-shadow duration-300">
-              <Calculator className="h-5 w-5 text-primary-foreground" />
+            <div className="relative h-11 w-11 rounded-xl gradient-bg flex items-center justify-center shadow-soft group-hover:shadow-glow transition-all duration-300 group-hover:scale-105">
+              <Zap className="h-6 w-6 text-primary-foreground" />
+              <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-yellow-400 animate-pulse" />
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-lg font-bold font-display gradient-text">
+              <h1 className="text-xl font-bold font-display gradient-text tracking-tight">
                 Utility Master
               </h1>
-              <p className="text-[10px] text-muted-foreground -mt-0.5">24+ Free Tools</p>
+              <p className="text-[11px] text-muted-foreground -mt-0.5 flex items-center gap-1">
+                <span className="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                50+ Free Tools • 100% Private
+              </p>
             </div>
           </Link>
 
@@ -41,6 +45,12 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+            <Link
+              to="/"
+              className="ml-2 px-4 py-2 text-sm font-semibold bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-all hover:scale-105 shadow-sm"
+            >
+              Explore Tools
+            </Link>
           </nav>
 
           {/* Actions */}
@@ -70,6 +80,13 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+            <Link
+              to="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block mx-4 mt-2 px-4 py-3 text-sm font-semibold text-center bg-primary text-primary-foreground rounded-lg"
+            >
+              🚀 Explore All Tools
+            </Link>
           </nav>
         )}
       </div>
