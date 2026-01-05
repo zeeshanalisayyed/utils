@@ -62,18 +62,33 @@ const VideoConverter = () => {
     const ffmpeg = ffmpegRef.current;
     try {
       setLoadError("");
+      
+      // Check for SharedArrayBuffer support (required for FFmpeg.wasm)
+      if (typeof SharedArrayBuffer === "undefined") {
+        setLoadError("Your browser doesn't support SharedArrayBuffer. Please use Chrome, Firefox, or Edge with proper security headers. Safari is not supported.");
+        return;
+      }
+      
       const baseURL = "https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd";
+      
+      ffmpeg.on("progress", ({ progress: p }) => setProgress(Math.round(p * 100)));
+      ffmpeg.on("log", ({ message }) => console.log("FFmpeg:", message));
+      
       await ffmpeg.load({
         coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, "text/javascript"),
         wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, "application/wasm"),
       });
-      ffmpeg.on("progress", ({ progress: p }) => setProgress(Math.round(p * 100)));
-      ffmpeg.on("log", ({ message }) => console.log("FFmpeg:", message));
+      
       setFfmpegLoaded(true);
       toast({ title: "Video converter ready!", description: "You can now upload and convert videos" });
     } catch (error) {
       console.error("Failed to load FFmpeg:", error);
-      setLoadError("Failed to load video converter. Please refresh the page or try a different browser.");
+      const errorMsg = error instanceof Error ? error.message : "Unknown error";
+      if (errorMsg.includes("SharedArrayBuffer")) {
+        setLoadError("SharedArrayBuffer is not available. This usually happens due to browser security restrictions. Try using Chrome or Firefox.");
+      } else {
+        setLoadError(`Failed to load video converter: ${errorMsg}. Please refresh or try a different browser.`);
+      }
       toast({ title: "Failed to load converter", description: "Please refresh the page", variant: "destructive" });
     }
   };
