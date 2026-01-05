@@ -17,19 +17,23 @@ export function Header() {
     <header className="sticky top-0 z-50 glass-strong">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo - More engaging */}
+          {/* Logo - Premium Branding */}
           <Link to="/" className="flex items-center gap-3 group">
-            <div className="relative h-11 w-11 rounded-xl gradient-bg flex items-center justify-center shadow-soft group-hover:shadow-glow transition-all duration-300 group-hover:scale-105">
-              <Zap className="h-6 w-6 text-primary-foreground" />
-              <Sparkles className="absolute -top-1 -right-1 h-4 w-4 text-yellow-400 animate-pulse" />
+            <div className="relative h-12 w-12 rounded-2xl gradient-bg flex items-center justify-center shadow-lg group-hover:shadow-glow transition-all duration-300 group-hover:scale-110">
+              <Zap className="h-7 w-7 text-primary-foreground" />
+              <Sparkles className="absolute -top-1.5 -right-1.5 h-5 w-5 text-yellow-400 animate-pulse" />
+              <div className="absolute inset-0 rounded-2xl bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <div className="hidden sm:block">
-              <h1 className="text-xl font-bold font-display gradient-text tracking-tight">
+              <h1 className="text-2xl font-bold font-display gradient-text tracking-tight leading-none">
                 Utility Master
               </h1>
-              <p className="text-[11px] text-muted-foreground -mt-0.5 flex items-center gap-1">
-                <span className="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                50+ Free Tools • 100% Private
+              <p className="text-xs text-muted-foreground mt-0.5 flex items-center gap-1.5">
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-500/10 border border-green-500/20">
+                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                  <span className="text-green-600 dark:text-green-400 font-medium text-[10px]">LIVE</span>
+                </span>
+                <span>50+ Tools • Free Forever</span>
               </p>
             </div>
           </Link>
