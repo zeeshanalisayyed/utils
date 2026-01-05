@@ -10,6 +10,7 @@ import { EngagementBanner } from "@/components/EngagementBanner";
 import { HeroStats } from "@/components/HeroStats";
 import { TrustBadges } from "@/components/TrustBadges";
 import { FloatingElements } from "@/components/FloatingElements";
+import { AdSupportNotice } from "@/components/AdSupportNotice";
 
 // Define categories
 export type Category = "all" | "financial" | "text" | "media" | "developer" | "converters" | "time" | "productivity" | "design" | "random" | "system";
@@ -235,6 +236,11 @@ const Index = () => {
         {/* Engagement Banner */}
         <section className="container mx-auto px-4">
           <EngagementBanner />
+        </section>
+
+        {/* Ad Support Notice */}
+        <section className="container mx-auto px-4 py-4">
+          <AdSupportNotice />
         </section>
 
         {/* Ad before Tools Grid */}
