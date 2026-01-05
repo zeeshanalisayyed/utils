@@ -1,5 +1,5 @@
 import React from "react";
-import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers } from "lucide-react";
+import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers, ArrowRight, Crown, Rocket } from "lucide-react";
 import { AdBanner, InArticleAd, FooterAd, InFeedAd } from "@/components/AdBanner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -7,6 +7,9 @@ import { ToolCard } from "@/components/ToolCard";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QuickStart } from "@/components/QuickStart";
 import { EngagementBanner } from "@/components/EngagementBanner";
+import { HeroStats } from "@/components/HeroStats";
+import { TrustBadges } from "@/components/TrustBadges";
+import { FloatingElements } from "@/components/FloatingElements";
 
 // Define categories
 export type Category = "all" | "financial" | "text" | "media" | "developer" | "converters" | "time" | "productivity" | "design" | "random" | "system";
@@ -131,33 +134,70 @@ const Index = () => {
       <Header />
 
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden">
+        {/* Hero Section - Enhanced */}
+        <section className="relative overflow-hidden min-h-[90vh] flex items-center">
           <div className="absolute inset-0 gradient-mesh" />
-          <div className="container mx-auto px-4 py-16 md:py-24 relative">
-            <div className="max-w-4xl mx-auto text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6 animate-fade-in">
-                <Sparkles className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium text-primary">50+ Free Utilities</span>
+          <FloatingElements />
+          
+          {/* Animated gradient orbs */}
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse-soft" />
+          <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/20 rounded-full blur-3xl animate-pulse-soft" style={{ animationDelay: '1s' }} />
+          
+          <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
+            <div className="max-w-5xl mx-auto">
+              {/* Top badges */}
+              <div className="flex flex-wrap justify-center gap-3 mb-8 animate-fade-in">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-yellow-500/20 to-orange-500/20 border border-yellow-500/30">
+                  <Crown className="h-4 w-4 text-yellow-500" />
+                  <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">#1 Free Utility App</span>
+                </div>
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
+                  <Sparkles className="h-4 w-4 text-primary animate-pulse" />
+                  <span className="text-sm font-medium text-primary">50+ Premium Tools</span>
+                </div>
               </div>
               
-              <h1 className="text-4xl md:text-6xl font-bold font-display mb-6 animate-fade-in-up text-balance">
-                Your Complete{" "}
-                <span className="gradient-text">Digital Utility</span>{" "}
-                Suite
-              </h1>
-              
-              <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto animate-fade-in-up leading-relaxed" style={{ animationDelay: '100ms' }}>
-                From financial calculators to media converters, everything you need to boost productivity in one beautiful, free toolkit.
-              </p>
+              {/* Main headline */}
+              <div className="text-center mb-10">
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold font-display mb-6 animate-fade-in-up text-balance leading-tight">
+                  <span className="block text-foreground">The Ultimate</span>
+                  <span className="block gradient-text animate-gradient bg-[length:200%_auto]">Utility Master</span>
+                </h1>
+                
+                <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto animate-fade-in-up leading-relaxed" style={{ animationDelay: '100ms' }}>
+                  <span className="text-foreground font-semibold">50+ powerful tools</span> for calculators, converters, media editing & more.
+                  <br className="hidden md:block" />
+                  <span className="text-primary font-medium">100% free • 100% private • Works offline</span>
+                </p>
 
-              <div className="flex flex-wrap justify-center gap-4 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
-                <a href="#tools" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl gradient-bg text-primary-foreground font-semibold shadow-soft hover:shadow-glow transition-all duration-300 hover:-translate-y-0.5">
-                  Explore Tools
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </a>
+                {/* CTA Buttons */}
+                <div className="flex flex-wrap justify-center gap-4 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+                  <a 
+                    href="#tools" 
+                    className="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl gradient-bg text-primary-foreground font-bold text-lg shadow-lg hover:shadow-glow transition-all duration-300 hover:-translate-y-1 hover:scale-105"
+                  >
+                    <Rocket className="h-5 w-5" />
+                    Start Using Free Tools
+                    <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                  <a 
+                    href="#tools" 
+                    className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-card border-2 border-border hover:border-primary/50 text-foreground font-semibold text-lg transition-all duration-300 hover:-translate-y-1"
+                  >
+                    <Zap className="h-5 w-5 text-primary" />
+                    Browse All Tools
+                  </a>
+                </div>
+              </div>
+
+              {/* Trust badges */}
+              <div className="mb-12 animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+                <TrustBadges />
+              </div>
+
+              {/* Stats */}
+              <div className="animate-fade-in-up" style={{ animationDelay: '400ms' }}>
+                <HeroStats />
               </div>
             </div>
           </div>
