@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { Video, Square, Download, Monitor } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Video, Square, Download, Monitor, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -7,28 +7,66 @@ import { AdBanner } from "@/components/AdBanner";
 import { PageLayout } from "@/components/PageLayout";
 import { SEOHead } from "@/components/SEOHead";
 import { FAQ } from "@/components/FAQ";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const ScreenRecorder = () => {
   const { toast } = useToast();
   const [isRecording, setIsRecording] = useState(false);
+  const [isSupported, setIsSupported] = useState(true);
+  const [browserWarning, setBrowserWarning] = useState("");
   const [recordings, setRecordings] = useState<Array<{ id: string; url: string; timestamp: number }>>(() => {
-    const saved = localStorage.getItem("recordings");
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem("recordings");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
   const [recordedUrl, setRecordedUrl] = useState<string>("");
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
+  useEffect(() => {
+    // Check browser support
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+      setIsSupported(false);
+      return;
+    }
+
+    // Detect browser for warnings
+    const ua = navigator.userAgent;
+    if (ua.includes("Firefox")) {
+      setBrowserWarning("Firefox may have limited screen recording features. For best results, use Chrome or Edge.");
+    } else if (ua.includes("Safari") && !ua.includes("Chrome")) {
+      setBrowserWarning("Safari has limited screen recording support. Please use Chrome or Edge for best results.");
+    }
+  }, []);
+
+  const getSupportedMimeType = () => {
+    const mimeTypes = [
+      'video/webm;codecs=vp9',
+      'video/webm;codecs=vp8',
+      'video/webm',
+      'video/mp4',
+    ];
+    
+    for (const mimeType of mimeTypes) {
+      if (MediaRecorder.isTypeSupported(mimeType)) {
+        return mimeType;
+      }
+    }
+    return 'video/webm';
+  };
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: { mediaSource: "screen" } as any,
+        video: true,
         audio: true,
       });
 
-      const mediaRecorder = new MediaRecorder(stream, {
-        mimeType: "video/webm",
-      });
+      const mimeType = getSupportedMimeType();
+      const mediaRecorder = new MediaRecorder(stream, { mimeType });
 
       mediaRecorderRef.current = mediaRecorder;
       chunksRef.current = [];
@@ -40,25 +78,38 @@ const ScreenRecorder = () => {
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "video/webm" });
+        const blob = new Blob(chunksRef.current, { type: mimeType.split(';')[0] });
         const url = URL.createObjectURL(blob);
         setRecordedUrl(url);
         const newRecording = { id: Date.now().toString(), url, timestamp: Date.now() };
-        const updated = [newRecording, ...recordings];
+        const updated = [newRecording, ...recordings].slice(0, 10); // Keep only last 10
         setRecordings(updated);
-        localStorage.setItem("recordings", JSON.stringify(updated));
+        try {
+          localStorage.setItem("recordings", JSON.stringify(updated));
+        } catch (e) {
+          console.warn("Could not save to localStorage");
+        }
         stream.getTracks().forEach((track) => track.stop());
       };
 
-      mediaRecorder.start();
+      mediaRecorder.start(1000); // Collect data every second
       setIsRecording(true);
       toast({ title: "Recording started" });
-    } catch (error) {
-      toast({
-        title: "Failed to start recording",
-        description: "Please grant screen recording permissions",
-        variant: "destructive",
-      });
+    } catch (error: any) {
+      console.error("Recording error:", error);
+      if (error.name === 'NotAllowedError') {
+        toast({
+          title: "Permission denied",
+          description: "Please allow screen recording access",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Failed to start recording",
+          description: error.message || "Please try again",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -111,6 +162,22 @@ const ScreenRecorder = () => {
       <AdBanner />
 
       <div className="max-w-4xl mx-auto space-y-6">
+        {!isSupported && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              Screen recording is not supported in your browser. Please use Chrome, Edge, or Firefox.
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {browserWarning && (
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{browserWarning}</AlertDescription>
+          </Alert>
+        )}
+
         <Card className="border-border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -141,7 +208,7 @@ const ScreenRecorder = () => {
                 Stop Recording
               </Button>
             ) : (
-              <Button onClick={startRecording} className="w-full">
+              <Button onClick={startRecording} className="w-full" disabled={!isSupported}>
                 <Video className="h-4 w-4 mr-2" />
                 Start Recording
               </Button>

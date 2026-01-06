@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Mic, Square, Copy, Check } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Mic, Square, Copy, Check, AlertCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,16 +8,26 @@ import { PageLayout } from "@/components/PageLayout";
 import { SEOHead } from "@/components/SEOHead";
 import { FAQ } from "@/components/FAQ";
 import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const SpeechToText = () => {
   const [text, setText] = useState("");
   const [isListening, setIsListening] = useState(false);
   const [copied, setCopied] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
-  const [recognition, setRecognition] = useState<any>(null);
+  const [browserInfo, setBrowserInfo] = useState("");
+  const recognitionRef = useRef<any>(null);
   const { toast } = useToast();
 
   useEffect(() => {
+    // Detect browser for better error messages
+    const ua = navigator.userAgent;
+    if (ua.includes("Firefox")) {
+      setBrowserInfo("Firefox has limited speech recognition support. Please use Chrome or Edge for best results.");
+    } else if (ua.includes("Safari") && !ua.includes("Chrome")) {
+      setBrowserInfo("Safari has partial support. For best results, use Chrome or Edge.");
+    }
+
     if (typeof window !== 'undefined') {
       const SpeechRecognitionAPI = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (SpeechRecognitionAPI) {
@@ -28,26 +38,27 @@ const SpeechToText = () => {
         recognitionInstance.lang = 'en-US';
 
         recognitionInstance.onresult = (event: any) => {
-          let interimTranscript = '';
           let finalTranscript = '';
 
           for (let i = event.resultIndex; i < event.results.length; i++) {
             const transcript = event.results[i][0].transcript;
             if (event.results[i].isFinal) {
               finalTranscript += transcript + ' ';
-            } else {
-              interimTranscript += transcript;
             }
           }
 
-          setText(prev => prev + finalTranscript);
+          if (finalTranscript) {
+            setText(prev => prev + finalTranscript);
+          }
         };
 
-        recognition.onerror = (event: any) => {
+        recognitionInstance.onerror = (event: any) => {
           console.error('Speech recognition error:', event.error);
           setIsListening(false);
           if (event.error === 'no-speech') {
-            toast({ title: "No speech detected", variant: "destructive" });
+            toast({ title: "No speech detected", description: "Please speak clearly into your microphone", variant: "destructive" });
+          } else if (event.error === 'not-allowed') {
+            toast({ title: "Microphone access denied", description: "Please allow microphone access in your browser settings", variant: "destructive" });
           } else {
             toast({ title: `Error: ${event.error}`, variant: "destructive" });
           }
@@ -57,24 +68,42 @@ const SpeechToText = () => {
           setIsListening(false);
         };
 
-        setRecognition(recognitionInstance);
+        recognitionRef.current = recognitionInstance;
       }
     }
-  }, []);
+
+    return () => {
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.stop();
+        } catch (e) {
+          // Ignore errors on cleanup
+        }
+      }
+    };
+  }, [toast]);
 
   const startListening = () => {
-    if (recognition) {
-      recognition.start();
-      setIsListening(true);
-      toast({ title: "Listening... Speak now" });
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+        toast({ title: "Listening... Speak now" });
+      } catch (e) {
+        toast({ title: "Failed to start", description: "Please refresh and try again", variant: "destructive" });
+      }
     }
   };
 
   const stopListening = () => {
-    if (recognition) {
-      recognition.stop();
-      setIsListening(false);
-      toast({ title: "Stopped listening" });
+    if (recognitionRef.current) {
+      try {
+        recognitionRef.current.stop();
+        setIsListening(false);
+        toast({ title: "Stopped listening" });
+      } catch (e) {
+        setIsListening(false);
+      }
     }
   };
 
