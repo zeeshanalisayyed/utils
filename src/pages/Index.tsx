@@ -11,6 +11,7 @@ import { HeroStats } from "@/components/HeroStats";
 import { TrustBadges } from "@/components/TrustBadges";
 import { FloatingElements } from "@/components/FloatingElements";
 import { AdSupportNotice } from "@/components/AdSupportNotice";
+import { FeaturedTool } from "@/components/FeaturedTool";
 
 // Define categories
 export type Category = "all" | "financial" | "text" | "media" | "developer" | "converters" | "time" | "productivity" | "design" | "random" | "system";
@@ -218,6 +219,13 @@ const Index = () => {
                 </div>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Featured Tool of the Day */}
+        <section className="py-8">
+          <div className="container mx-auto px-4">
+            <FeaturedTool />
           </div>
         </section>
 
