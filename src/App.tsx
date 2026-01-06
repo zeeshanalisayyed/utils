@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { InterstitialAd } from "@/components/InterstitialAd";
 import { MobileStickyAd } from "@/components/MobileStickyAd";
+import { ConsentBanner } from "@/components/ConsentBanner";
 import Index from "./pages/Index";
 import SipCalculator from "./pages/SipCalculator";
 import IncomeTax from "./pages/IncomeTax";
@@ -142,6 +143,9 @@ const App = () => (
           <Route path="/image-compressor" element={<ImageCompressor />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        
+        {/* Consent Banner - shows for first-time visitors */}
+        <ConsentBanner />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
