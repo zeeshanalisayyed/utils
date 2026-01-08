@@ -66,6 +66,13 @@ import DiceRoller from "./pages/DiceRoller";
 import CoinFlipper from "./pages/CoinFlipper";
 import CsvToJsonConverter from "./pages/CsvToJsonConverter";
 import ImageCompressor from "./pages/ImageCompressor";
+import UnitConverter from "./pages/UnitConverter";
+import ColorContrastChecker from "./pages/ColorContrastChecker";
+import BinaryConverter from "./pages/BinaryConverter";
+import CharacterCounter from "./pages/CharacterCounter";
+import CountdownTimer from "./pages/CountdownTimer";
+import HexConverter from "./pages/HexConverter";
+import AspectRatioCalculator from "./pages/AspectRatioCalculator";
 
 const queryClient = new QueryClient();
 
@@ -141,6 +148,13 @@ const App = () => (
           <Route path="/coin-flipper" element={<CoinFlipper />} />
           <Route path="/csv-to-json-converter" element={<CsvToJsonConverter />} />
           <Route path="/image-compressor" element={<ImageCompressor />} />
+          <Route path="/unit-converter" element={<UnitConverter />} />
+          <Route path="/color-contrast-checker" element={<ColorContrastChecker />} />
+          <Route path="/binary-converter" element={<BinaryConverter />} />
+          <Route path="/character-counter" element={<CharacterCounter />} />
+          <Route path="/countdown-timer" element={<CountdownTimer />} />
+          <Route path="/hex-converter" element={<HexConverter />} />
+          <Route path="/aspect-ratio-calculator" element={<AspectRatioCalculator />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         
