@@ -12,6 +12,7 @@ import { TrustBadges } from "@/components/TrustBadges";
 import { FloatingElements } from "@/components/FloatingElements";
 import { AdSupportNotice } from "@/components/AdSupportNotice";
 import { FeaturedTool } from "@/components/FeaturedTool";
+import { UsageStatsDashboard } from "@/components/UsageStatsDashboard";
 
 // Define categories
 export type Category = "all" | "financial" | "text" | "media" | "developer" | "converters" | "time" | "productivity" | "design" | "random" | "system";
@@ -92,6 +93,15 @@ const utilities: Utility[] = [
   { title: "Dice Roller", description: "Roll virtual dice", icon: Dice6, path: "/dice-roller", gradient: "from-accent to-primary-glow", category: "random" },
   { title: "Coin Flipper", description: "Flip a virtual coin", icon: Coins, path: "/coin-flipper", gradient: "from-primary-glow to-accent", category: "random" },
   { title: "Random Number Generator", description: "Generate random numbers", icon: Dice6, path: "/random-number-generator", gradient: "from-accent to-primary", category: "random" },
+  
+  // New Tools
+  { title: "Unit Converter", description: "Convert units of measurement", icon: Ruler, path: "/unit-converter", gradient: "from-primary to-accent", category: "converters" },
+  { title: "Color Contrast Checker", description: "Check WCAG accessibility", icon: Palette, path: "/color-contrast-checker", gradient: "from-accent to-primary-glow", category: "design" },
+  { title: "Binary Converter", description: "Convert text to binary", icon: Code, path: "/binary-converter", gradient: "from-primary-glow to-accent", category: "developer" },
+  { title: "Character Counter", description: "Count characters and words", icon: Type, path: "/character-counter", gradient: "from-primary to-primary-glow", category: "text" },
+  { title: "Countdown Timer", description: "Set countdown timers", icon: Timer, path: "/countdown-timer", gradient: "from-accent to-primary", category: "time" },
+  { title: "Hex Converter", description: "Convert text to hexadecimal", icon: Hash, path: "/hex-converter", gradient: "from-primary-glow to-primary", category: "developer" },
+  { title: "Aspect Ratio Calculator", description: "Calculate aspect ratios", icon: Layers, path: "/aspect-ratio-calculator", gradient: "from-accent to-primary-glow", category: "design" },
   
   // System Tools
   { title: "Sound Master", description: "Control app sounds and notifications", icon: Volume2, path: "/sound-master", gradient: "from-accent to-primary", category: "system" },
@@ -226,6 +236,13 @@ const Index = () => {
         <section className="py-8">
           <div className="container mx-auto px-4">
             <FeaturedTool />
+          </div>
+        </section>
+
+        {/* Usage Stats Dashboard */}
+        <section className="py-8">
+          <div className="container mx-auto px-4">
+            <UsageStatsDashboard />
           </div>
         </section>
 
