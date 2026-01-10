@@ -1,5 +1,5 @@
 import React from "react";
-import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers, ArrowRight, Crown, Rocket } from "lucide-react";
+import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers, ArrowRight, Crown, Rocket, Smile, Radio, Film } from "lucide-react";
 import { AdBanner, InArticleAd, FooterAd, InFeedAd } from "@/components/AdBanner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -111,6 +111,11 @@ const utilities: Utility[] = [
   // Security & Privacy
   { title: "Password Generator", description: "Generate secure passwords", icon: FileText, path: "/password-generator", gradient: "from-primary to-primary-glow", category: "productivity" },
   { title: "Password Strength", description: "Check password strength", icon: Shield, path: "/password-strength-checker", gradient: "from-primary to-accent", category: "productivity" },
+  
+  // New Tools
+  { title: "Emoji Picker", description: "Search and copy emojis easily", icon: Smile, path: "/emoji-picker", gradient: "from-yellow-500 to-orange-500", category: "text" },
+  { title: "Morse Code Translator", description: "Convert text to morse code", icon: Radio, path: "/morse-code-translator", gradient: "from-primary to-accent", category: "converters" },
+  { title: "AI Video Generator", description: "Create videos from text prompts", icon: Film, path: "/ai-video-generator", gradient: "from-purple-500 to-pink-500", category: "media" },
 ];
 
 const features = [
