@@ -1,5 +1,6 @@
 import React from "react";
-import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers, ArrowRight, Crown, Rocket, Smile, Radio, Film } from "lucide-react";
+import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers, ArrowRight, Crown, Rocket, Smile, Radio, X, Filter, Star } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { AdBanner, InArticleAd, FooterAd, InFeedAd } from "@/components/AdBanner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -115,7 +116,6 @@ const utilities: Utility[] = [
   // New Tools
   { title: "Emoji Picker", description: "Search and copy emojis easily", icon: Smile, path: "/emoji-picker", gradient: "from-yellow-500 to-orange-500", category: "text" },
   { title: "Morse Code Translator", description: "Convert text to morse code", icon: Radio, path: "/morse-code-translator", gradient: "from-primary to-accent", category: "converters" },
-  { title: "AI Video Generator", description: "Create videos from text prompts", icon: Film, path: "/ai-video-generator", gradient: "from-purple-500 to-pink-500", category: "media" },
 ];
 
 const features = [
@@ -139,12 +139,41 @@ const categoryInfo: Record<Category, { label: string; icon: any; description: st
   system: { label: "System", icon: Battery, description: "System optimization tools" },
 };
 
+// Popular tools (marked for quick access)
+const popularToolPaths = [
+  "/sip-calculator", "/qr-code-generator", "/password-generator", "/image-compressor",
+  "/json-formatter", "/color-picker", "/word-counter", "/pdf-converter"
+];
+
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = React.useState<Category>("all");
+  const [searchQuery, setSearchQuery] = React.useState("");
+  const [showPopularOnly, setShowPopularOnly] = React.useState(false);
 
-  const filteredUtilities = selectedCategory === "all" 
-    ? utilities 
-    : utilities.filter(utility => utility.category === selectedCategory);
+  const filteredUtilities = React.useMemo(() => {
+    let filtered = utilities;
+    
+    // Filter by category
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter(utility => utility.category === selectedCategory);
+    }
+    
+    // Filter by search query
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(utility => 
+        utility.title.toLowerCase().includes(query) ||
+        utility.description.toLowerCase().includes(query)
+      );
+    }
+    
+    // Filter by popular
+    if (showPopularOnly) {
+      filtered = filtered.filter(utility => popularToolPaths.includes(utility.path));
+    }
+    
+    return filtered;
+  }, [selectedCategory, searchQuery, showPopularOnly]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -281,20 +310,110 @@ const Index = () => {
         {/* Tools Grid */}
         <section id="tools" className="py-16">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
+            <div className="text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-bold font-display text-foreground mb-4">
                 All Tools at Your Fingertips
               </h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
+              <p className="text-muted-foreground max-w-2xl mx-auto">
                 Click any tool to get started instantly. No signup required.
               </p>
+            </div>
+
+            {/* Search and Filter Bar */}
+            <div className="max-w-4xl mx-auto mb-8">
+              <div className="flex flex-col sm:flex-row gap-4 items-center">
+                {/* Search Input */}
+                <div className="relative flex-1 w-full">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Search tools by name or description..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-12 pr-10 h-12 text-base rounded-xl border-2 border-border focus:border-primary transition-colors bg-background"
+                  />
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-muted rounded-full transition-colors"
+                    >
+                      <X className="h-4 w-4 text-muted-foreground" />
+                    </button>
+                  )}
+                </div>
+                
+                {/* Popular Filter Toggle */}
+                <button
+                  onClick={() => setShowPopularOnly(!showPopularOnly)}
+                  className={`flex items-center gap-2 px-5 py-3 rounded-xl font-medium transition-all duration-200 whitespace-nowrap ${
+                    showPopularOnly
+                      ? "bg-primary text-primary-foreground shadow-md"
+                      : "bg-muted hover:bg-muted/80 text-foreground border border-border"
+                  }`}
+                >
+                  <Star className={`h-4 w-4 ${showPopularOnly ? "fill-current" : ""}`} />
+                  Popular
+                </button>
+              </div>
+              
+              {/* Active Filters Display */}
+              {(searchQuery || showPopularOnly || selectedCategory !== "all") && (
+                <div className="flex flex-wrap items-center gap-2 mt-4">
+                  <span className="text-sm text-muted-foreground flex items-center gap-1">
+                    <Filter className="h-4 w-4" />
+                    Filters:
+                  </span>
+                  {searchQuery && (
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm">
+                      "{searchQuery}"
+                      <button onClick={() => setSearchQuery("")} className="hover:bg-primary/20 rounded-full p-0.5">
+                        <X className="h-3 w-3" />
+                      </button>
+                    </span>
+                  )}
+                  {showPopularOnly && (
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 text-sm">
+                      <Star className="h-3 w-3 fill-current" />
+                      Popular Only
+                      <button onClick={() => setShowPopularOnly(false)} className="hover:bg-yellow-500/20 rounded-full p-0.5">
+                        <X className="h-3 w-3" />
+                      </button>
+                    </span>
+                  )}
+                  {selectedCategory !== "all" && (
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-accent/10 text-accent-foreground text-sm">
+                      {categoryInfo[selectedCategory].label}
+                      <button onClick={() => setSelectedCategory("all")} className="hover:bg-accent/20 rounded-full p-0.5">
+                        <X className="h-3 w-3" />
+                      </button>
+                    </span>
+                  )}
+                  <button
+                    onClick={() => {
+                      setSearchQuery("");
+                      setShowPopularOnly(false);
+                      setSelectedCategory("all");
+                    }}
+                    className="text-sm text-muted-foreground hover:text-foreground underline"
+                  >
+                    Clear all
+                  </button>
+                </div>
+              )}
+              
+              {/* Results Count */}
+              <div className="mt-4 text-center">
+                <span className="text-sm text-muted-foreground">
+                  Showing <span className="font-semibold text-foreground">{filteredUtilities.length}</span> of {utilities.length} tools
+                </span>
+              </div>
             </div>
 
             {/* Category Tabs */}
             <div className="max-w-6xl mx-auto mb-8">
               <Tabs value={selectedCategory} onValueChange={(value) => setSelectedCategory(value as Category)} className="w-full">
-                <div className="overflow-x-auto -mx-4 px-4">
-                  <TabsList className="inline-flex w-auto h-auto p-1 bg-muted/50 min-w-full sm:min-w-0">
+                <div className="overflow-x-auto -mx-4 px-4 pb-2">
+                  <TabsList className="inline-flex w-auto h-auto p-1.5 bg-muted/50 rounded-2xl min-w-full sm:min-w-0 gap-1">
                     {(Object.keys(categoryInfo) as Category[]).map((category) => {
                       const info = categoryInfo[category];
                       const Icon = info.icon;
@@ -303,11 +422,11 @@ const Index = () => {
                         <TabsTrigger
                           key={category}
                           value={category}
-                          className="flex flex-col items-center gap-1.5 px-2 sm:px-3 py-2 sm:py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm min-w-[70px] sm:min-w-[90px] flex-shrink-0"
+                          className="flex flex-col items-center gap-1 px-3 sm:px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-md rounded-xl min-w-[75px] sm:min-w-[95px] flex-shrink-0 transition-all duration-200"
                         >
                           <Icon className="h-4 w-4" />
                           <span className="text-[10px] sm:text-xs font-medium whitespace-nowrap text-center leading-tight">{info.label}</span>
-                          <span className="text-[9px] sm:text-[10px] text-muted-foreground">({count})</span>
+                          <span className="text-[9px] sm:text-[10px] text-muted-foreground bg-muted/50 px-2 py-0.5 rounded-full">({count})</span>
                         </TabsTrigger>
                       );
                     })}
@@ -324,20 +443,34 @@ const Index = () => {
                   </div>
                   <p className="text-sm text-muted-foreground">{categoryInfo[selectedCategory].description}</p>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {filteredUtilities.map((utility, index) => (
                     <React.Fragment key={utility.path}>
-                      <ToolCard {...utility} index={index} />
-                      {/* Insert native in-feed ad after every 6 tools */}
-                      {(index + 1) % 6 === 0 && index < filteredUtilities.length - 1 && (
+                      <ToolCard {...utility} index={index} isPopular={popularToolPaths.includes(utility.path)} />
+                      {/* Insert native in-feed ad after every 8 tools */}
+                      {(index + 1) % 8 === 0 && index < filteredUtilities.length - 1 && (
                         <InFeedAd />
                       )}
                     </React.Fragment>
                   ))}
                 </div>
                 {filteredUtilities.length === 0 && (
-                  <div className="text-center py-12">
-                    <p className="text-muted-foreground">No tools found in this category.</p>
+                  <div className="text-center py-16">
+                    <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                      <Search className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">No tools found</h3>
+                    <p className="text-muted-foreground mb-4">Try adjusting your search or filters</p>
+                    <button
+                      onClick={() => {
+                        setSearchQuery("");
+                        setShowPopularOnly(false);
+                        setSelectedCategory("all");
+                      }}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
+                    >
+                      Clear all filters
+                    </button>
                   </div>
                 )}
               </div>
