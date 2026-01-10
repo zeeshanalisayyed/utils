@@ -73,6 +73,9 @@ import CharacterCounter from "./pages/CharacterCounter";
 import CountdownTimer from "./pages/CountdownTimer";
 import HexConverter from "./pages/HexConverter";
 import AspectRatioCalculator from "./pages/AspectRatioCalculator";
+import EmojiPicker from "./pages/EmojiPicker";
+import MorseCodeTranslator from "./pages/MorseCodeTranslator";
+import AiVideoGenerator from "./pages/AiVideoGenerator";
 
 const queryClient = new QueryClient();
 
@@ -155,6 +158,9 @@ const App = () => (
           <Route path="/countdown-timer" element={<CountdownTimer />} />
           <Route path="/hex-converter" element={<HexConverter />} />
           <Route path="/aspect-ratio-calculator" element={<AspectRatioCalculator />} />
+          <Route path="/emoji-picker" element={<EmojiPicker />} />
+          <Route path="/morse-code-translator" element={<MorseCodeTranslator />} />
+          <Route path="/ai-video-generator" element={<AiVideoGenerator />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         
