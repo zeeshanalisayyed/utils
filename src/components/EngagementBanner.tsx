@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { TrendingUp, Clock, Zap } from "lucide-react";
+import { getProgress, saveProgress, getLevelFromXP, UserProgress } from "@/hooks/useToolUsage";
 
 const trendingTools = [
   { title: "QR Code Generator", path: "/qr-code-generator", uses: "2.5k" },
@@ -10,14 +11,13 @@ const trendingTools = [
 ];
 
 export function EngagementBanner() {
-  const [recentTools, setRecentTools] = useState<string[]>([]);
+  const [progress, setProgress] = useState<UserProgress | null>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem("recent-tools");
-    if (saved) {
-      setRecentTools(JSON.parse(saved));
-    }
+    setProgress(getProgress());
   }, []);
+
+  const recentTools = progress?.toolsUsed.slice(-5).reverse() || [];
 
   return (
     <div className="grid md:grid-cols-2 gap-4 mb-8">
@@ -92,13 +92,134 @@ export function EngagementBanner() {
   );
 }
 
-// Hook to track tool usage
+// Category mapping for tools
+const toolCategories: Record<string, string> = {
+  "/sip-calculator": "financial",
+  "/income-tax": "financial",
+  "/loan-calculator": "financial",
+  "/gst-calculator": "financial",
+  "/tip-calculator": "financial",
+  "/compound-interest-calculator": "financial",
+  "/roi-calculator": "financial",
+  "/percentage-calculator": "financial",
+  "/bmi-calculator": "financial",
+  "/text-case-converter": "text",
+  "/word-counter": "text",
+  "/lorem-ipsum-generator": "text",
+  "/markdown-editor": "text",
+  "/text-diff-checker": "text",
+  "/email-validator": "text",
+  "/character-counter": "text",
+  "/emoji-picker": "text",
+  "/image-tools": "media",
+  "/image-compressor": "media",
+  "/image-to-text": "media",
+  "/video-converter": "media",
+  "/video-downloader": "media",
+  "/mp3-cutter": "media",
+  "/screen-recorder": "media",
+  "/pdf-converter": "media",
+  "/text-to-speech": "media",
+  "/speech-to-text": "media",
+  "/json-formatter": "developer",
+  "/regex-tester": "developer",
+  "/hash-generator": "developer",
+  "/uuid-generator": "developer",
+  "/base64-encoder": "developer",
+  "/url-encoder": "developer",
+  "/binary-converter": "developer",
+  "/hex-converter": "developer",
+  "/converters": "converters",
+  "/csv-to-json-converter": "converters",
+  "/roman-numeral-converter": "converters",
+  "/unit-converter": "converters",
+  "/morse-code-translator": "converters",
+  "/age-calculator": "time",
+  "/date-calculator": "time",
+  "/time-zone-converter": "time",
+  "/stopwatch-timer": "time",
+  "/pomodoro-timer": "time",
+  "/countdown-timer": "time",
+  "/notes": "productivity",
+  "/reminder": "productivity",
+  "/whatsapp-direct": "productivity",
+  "/password-generator": "productivity",
+  "/password-strength-checker": "productivity",
+  "/qr-code-generator": "design",
+  "/color-picker": "design",
+  "/app-icon-creator": "design",
+  "/css-gradient-generator": "design",
+  "/color-contrast-checker": "design",
+  "/aspect-ratio-calculator": "design",
+  "/dice-roller": "random",
+  "/coin-flipper": "random",
+  "/random-number-generator": "random",
+  "/sound-master": "system",
+  "/battery-saver": "system",
+  "/screenshot-organizer": "system",
+};
+
+// Hook to track tool usage with XP system
 export function useToolTracking(toolPath: string) {
   useEffect(() => {
+    if (!toolPath || toolPath === "/") return;
+    
+    const progress = getProgress();
+    const isNewTool = !progress.toolsUsed.includes(toolPath);
+    const category = toolCategories[toolPath];
+    
+    // Update tools used
+    if (isNewTool) {
+      progress.toolsUsed.push(toolPath);
+      progress.xp += 50; // XP for new tool
+    }
+    
+    // Update total uses
+    progress.totalUses += 1;
+    progress.xp += 10; // XP per use
+    
+    // Update level
+    progress.level = getLevelFromXP(progress.xp);
+    
+    // Update daily challenges
+    progress.dailyChallenges = progress.dailyChallenges.map(challenge => {
+      if (progress.completedChallenges.includes(challenge.id)) {
+        return challenge;
+      }
+      
+      let newCurrent = challenge.current;
+      
+      switch (challenge.type) {
+        case "use_tools":
+          newCurrent = Math.min(challenge.current + 1, challenge.target);
+          break;
+        case "new_tools":
+          if (isNewTool) {
+            newCurrent = Math.min(challenge.current + 1, challenge.target);
+          }
+          break;
+        case "use_category":
+          if (category === challenge.category) {
+            newCurrent = Math.min(challenge.current + 1, challenge.target);
+          }
+          break;
+      }
+      
+      // Check if challenge completed
+      if (newCurrent >= challenge.target && !progress.completedChallenges.includes(challenge.id)) {
+        progress.completedChallenges.push(challenge.id);
+        progress.xp += challenge.xpReward;
+        progress.level = getLevelFromXP(progress.xp);
+      }
+      
+      return { ...challenge, current: newCurrent };
+    });
+    
+    saveProgress(progress);
+    
+    // Also update legacy storage
     const saved = localStorage.getItem("recent-tools");
     const recent: string[] = saved ? JSON.parse(saved) : [];
-    
-    // Add current tool to front, remove duplicates, keep max 5
     const updated = [toolPath, ...recent.filter(p => p !== toolPath)].slice(0, 5);
     localStorage.setItem("recent-tools", JSON.stringify(updated));
   }, [toolPath]);

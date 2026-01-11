@@ -10,8 +10,11 @@ import { PageLayout } from "@/components/PageLayout";
 import { SEOHead } from "@/components/SEOHead";
 import { FAQ } from "@/components/FAQ";
 import { useToast } from "@/hooks/use-toast";
+import { useToolUsage } from "@/hooks/useToolUsage";
 
 const PasswordGenerator = () => {
+  useToolUsage("/password-generator", "productivity");
+  
   const [password, setPassword] = useState("");
   const [length, setLength] = useState([16]);
   const [includeUppercase, setIncludeUppercase] = useState(true);
