@@ -13,7 +13,7 @@ import { TrustBadges } from "@/components/TrustBadges";
 import { FloatingElements } from "@/components/FloatingElements";
 import { AdSupportNotice } from "@/components/AdSupportNotice";
 import { FeaturedTool } from "@/components/FeaturedTool";
-import { UsageStatsDashboard } from "@/components/UsageStatsDashboard";
+import { GamificationDashboard } from "@/components/GamificationDashboard";
 
 // Define categories
 export type Category = "all" | "financial" | "text" | "media" | "developer" | "converters" | "time" | "productivity" | "design" | "random" | "system";
@@ -273,10 +273,10 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Usage Stats Dashboard */}
+        {/* Gamification Dashboard */}
         <section className="py-8">
           <div className="container mx-auto px-4">
-            <UsageStatsDashboard />
+            <GamificationDashboard />
           </div>
         </section>
 
