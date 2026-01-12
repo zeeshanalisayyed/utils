@@ -14,6 +14,9 @@ import { FloatingElements } from "@/components/FloatingElements";
 import { AdSupportNotice } from "@/components/AdSupportNotice";
 import { FeaturedTool } from "@/components/FeaturedTool";
 import { GamificationDashboard } from "@/components/GamificationDashboard";
+import { ScrollToTop } from "@/components/ScrollToTop";
+import { RecentlyUsed } from "@/components/RecentlyUsed";
+import { SEOHead } from "@/components/SEOHead";
 
 // Define categories
 export type Category = "all" | "financial" | "text" | "media" | "developer" | "converters" | "time" | "productivity" | "design" | "random" | "system";
@@ -175,9 +178,35 @@ const Index = () => {
     return filtered;
   }, [selectedCategory, searchQuery, showPopularOnly]);
 
+  // SEO structured data for the homepage
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Utility Master",
+    "alternateName": ["Utils", "DevTools", "Online Tools", "Free Tools", "Utility Tools"],
+    "url": "https://utils.lovable.app",
+    "description": "Free online tools suite with 50+ utilities including calculators, converters, developer tools, image tools, and productivity apps.",
+    "applicationCategory": "UtilitiesApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "featureList": utilities.map(u => u.title),
+  };
+
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <SEOHead
+        title="Utility Master - 50+ Free Online Tools | Calculator, Converter, DevTools & Utils"
+        description="Free online tools suite with 50+ utilities: SIP Calculator, JSON Formatter, PDF Converter, Password Generator, Unit Converter, DevTools, and more. Fast, secure, works offline."
+        keywords="online tools, free tools, utility, utils, devtools, developer tools, calculators, converters, SIP calculator, JSON formatter, PDF converter, password generator, unit converter, QR code generator"
+        canonicalUrl="https://utils.lovable.app/"
+        structuredData={structuredData}
+      />
       <Header />
+      <ScrollToTop />
 
       <main className="flex-1">
         {/* Hero Section - Simplified & Clean */}
@@ -277,6 +306,9 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        {/* Recently Used - Quick Access */}
+        <RecentlyUsed allTools={utilities} />
 
         {/* Gamification Dashboard - Compact */}
         <section className="py-6">
