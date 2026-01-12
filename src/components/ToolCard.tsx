@@ -2,6 +2,7 @@ import { LucideIcon, Star, ArrowRight, Sparkles } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getProgress } from "@/hooks/useToolUsage";
+import { isFavorite, toggleFavorite } from "@/components/RecentlyUsed";
 
 interface ToolCardProps {
   title: string;
@@ -15,11 +16,20 @@ interface ToolCardProps {
 
 export function ToolCard({ title, description, icon: Icon, path, gradient, index, isPopular }: ToolCardProps) {
   const [isUsed, setIsUsed] = useState(false);
+  const [isFav, setIsFav] = useState(false);
   
   useEffect(() => {
     const progress = getProgress();
     setIsUsed(progress.toolsUsed.includes(path));
+    setIsFav(isFavorite(path));
   }, [path]);
+
+  const handleToggleFavorite = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const newState = toggleFavorite(path);
+    setIsFav(newState);
+  };
 
   return (
     <Link 
@@ -34,8 +44,19 @@ export function ToolCard({ title, description, icon: Icon, path, gradient, index
         } p-4 sm:p-5 hover:shadow-strong hover:-translate-y-1`}
         style={{ animationDelay: `${index * 30}ms` }}
       >
-        {/* Badges */}
+        {/* Badges and Favorite Button */}
         <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
+          <button
+            onClick={handleToggleFavorite}
+            className={`p-1.5 rounded-full transition-all ${
+              isFav 
+                ? "bg-yellow-500/10 hover:bg-yellow-500/20" 
+                : "bg-muted/50 hover:bg-muted opacity-0 group-hover:opacity-100"
+            }`}
+            aria-label={isFav ? "Remove from favorites" : "Add to favorites"}
+          >
+            <Star className={`h-3.5 w-3.5 ${isFav ? "text-yellow-500 fill-yellow-500" : "text-muted-foreground"}`} />
+          </button>
           {isUsed && (
             <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20">
               <Sparkles className="h-2.5 w-2.5 text-primary" />
