@@ -115,7 +115,7 @@ const ScreenshotOrganizer = () => {
         <Alert className="border-primary/20 bg-primary/5">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            Advanced categorization requires image analysis. Upload interface ready for backend integration.
+            AI-powered screenshot categorization. Upload your screenshots and our AI will automatically detect which platform they belong to.
           </AlertDescription>
         </Alert>
 

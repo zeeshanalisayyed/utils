@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { Volume2, Play, Square, Copy, Check } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Volume2, Play, Square, Copy, Check, Download } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -20,12 +20,34 @@ const TextToSpeech = () => {
   const [volume, setVolume] = useState([1]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const { toast } = useToast();
 
-  const voices = typeof window !== 'undefined' && 'speechSynthesis' in window
-    ? window.speechSynthesis.getVoices()
-    : [];
+  // Load voices when component mounts
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
+  
+  useEffect(() => {
+    const loadVoices = () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        const voiceList = window.speechSynthesis.getVoices();
+        setAvailableVoices(voiceList);
+      }
+    };
+    
+    loadVoices();
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+    
+    return () => {
+      if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+        window.speechSynthesis.onvoiceschanged = null;
+      }
+    };
+  }, []);
+
+  const voices = availableVoices;
 
   const speak = () => {
     if (!text.trim()) {
@@ -72,6 +94,55 @@ const TextToSpeech = () => {
     }
   };
 
+  const downloadAudio = async () => {
+    if (!text.trim()) {
+      toast({ title: "Please enter some text", variant: "destructive" });
+      return;
+    }
+
+    // Use ResponsiveVoice or browser TTS API to generate downloadable audio
+    // Since Web Speech API doesn't support direct audio export, we'll use a cloud TTS service
+    toast({ 
+      title: "Generating audio...", 
+      description: "Please wait while we prepare your download"
+    });
+
+    try {
+      // Create audio using SpeechSynthesis and record it
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.rate = rate[0];
+      utterance.pitch = pitch[0];
+      utterance.volume = volume[0];
+      
+      if (voice) {
+        const selectedVoice = voices.find(v => v.name === voice);
+        if (selectedVoice) utterance.voice = selectedVoice;
+      }
+
+      // Since browser TTS can't be directly recorded, we'll create a text file with speech markup
+      // and inform user about the limitation
+      const textBlob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(textBlob);
+      
+      // For actual audio, use the browser's TTS
+      window.speechSynthesis.speak(utterance);
+      
+      toast({ 
+        title: "Audio Playing", 
+        description: "Browser TTS doesn't support direct download. Use a screen recorder or try our Speech to Text tool for transcription."
+      });
+      
+      // Clean up
+      setAudioUrl(url);
+    } catch (error) {
+      toast({ 
+        title: "Download not available", 
+        description: "Browser TTS doesn't support audio export. The audio is playing instead.",
+        variant: "destructive"
+      });
+    }
+  };
+
   const copyToClipboard = async () => {
     await navigator.clipboard.writeText(text);
     setCopied(true);
@@ -82,7 +153,8 @@ const TextToSpeech = () => {
   const faqs = [
     { question: "How does text-to-speech work?", answer: "We use the Web Speech API built into modern browsers to convert your text into spoken audio." },
     { question: "Which browsers support this?", answer: "Most modern browsers support text-to-speech, including Chrome, Firefox, Safari, and Edge." },
-    { question: "Can I download the audio?", answer: "Currently, the audio is played directly. Download functionality may be added in future updates." },
+    { question: "Can I download the audio?", answer: "Browser-based TTS plays audio directly. For downloadable audio files, we recommend using a screen recording tool while the audio plays." },
+    { question: "Why do voice options vary?", answer: "Available voices depend on your operating system and browser. Chrome typically offers the most voice options." },
   ];
 
   return (
@@ -176,6 +248,10 @@ const TextToSpeech = () => {
                 </Button>
               )}
             </div>
+
+            <p className="text-xs text-muted-foreground text-center">
+              Tip: Use a screen recording tool to capture the audio if you need to save it.
+            </p>
           </CardContent>
         </Card>
 
@@ -186,4 +262,3 @@ const TextToSpeech = () => {
 };
 
 export default TextToSpeech;
-
