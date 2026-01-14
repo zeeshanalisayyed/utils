@@ -7,6 +7,8 @@ import { PDFDocument, rgb } from "pdf-lib";
 import { Document, Packer, Paragraph, TextRun } from "docx";
 import { AdBanner } from "@/components/AdBanner";
 import { PageLayout } from "@/components/PageLayout";
+import { SEOHead } from "@/components/SEOHead";
+import { FAQ } from "@/components/FAQ";
 
 const PdfConverter = () => {
   const { toast } = useToast();
@@ -102,8 +104,21 @@ const PdfConverter = () => {
     }
   };
 
+  const faqs = [
+    { question: "What file formats are supported?", answer: "We support PDF to Word (DOCX), Word to PDF, and Image (JPG/PNG) to PDF conversions." },
+    { question: "Is there a file size limit?", answer: "For best performance, keep files under 10MB. Larger files may take longer to process." },
+    { question: "Will my formatting be preserved?", answer: "Basic formatting is preserved. For complex documents with advanced formatting, professional tools may be needed." },
+    { question: "Is my data secure?", answer: "Yes! All processing happens in your browser. Your files are never uploaded to any server." },
+  ];
+
   return (
     <PageLayout title="PDF Converter" description="Convert between PDF, Word, and Image formats">
+      <SEOHead
+        title="PDF Converter - Convert PDF to Word, Image to PDF | Utility Master"
+        description="Free online PDF converter. Convert PDF to Word, Word to PDF, and images to PDF. No upload required - works 100% in your browser."
+        keywords="pdf converter, pdf to word, word to pdf, image to pdf, free pdf converter, online pdf converter"
+        canonicalUrl="/pdf-converter"
+      />
       <AdBanner />
       <div className="max-w-4xl mx-auto">
         <div className="grid md:grid-cols-3 gap-4 mb-6">
@@ -151,9 +166,13 @@ const PdfConverter = () => {
         <Card className="border-border mt-6">
           <CardHeader><CardTitle>Note</CardTitle></CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground">This converter provides basic conversion between PDF, Word, and Image formats. For production use with complex documents, consider using specialized services.</p>
+            <p className="text-sm text-muted-foreground">This converter provides basic conversion between PDF, Word, and Image formats. All processing happens locally in your browser for maximum privacy.</p>
           </CardContent>
         </Card>
+        
+        <div className="mt-6">
+          <FAQ items={faqs} />
+        </div>
       </div>
     </PageLayout>
   );

@@ -7,6 +7,8 @@ import { Slider } from "@/components/ui/slider";
 import { useToast } from "@/hooks/use-toast";
 import { AdBanner } from "@/components/AdBanner";
 import { PageLayout } from "@/components/PageLayout";
+import { SEOHead } from "@/components/SEOHead";
+import { FAQ } from "@/components/FAQ";
 
 const Mp3Cutter = () => {
   const { toast } = useToast();
@@ -128,8 +130,21 @@ const Mp3Cutter = () => {
     toast({ title: "Audio downloaded" });
   };
 
+  const faqs = [
+    { question: "What audio formats are supported?", answer: "We support MP3, WAV, OGG, M4A, and most common audio formats. The output is always WAV for maximum quality." },
+    { question: "Is there a file size limit?", answer: "For best performance, keep files under 50MB. Larger files may take longer to process." },
+    { question: "Will the audio quality be preserved?", answer: "Yes! We process audio at full quality. The output is saved as a lossless WAV file." },
+    { question: "Is my data secure?", answer: "Absolutely! All processing happens in your browser. Your audio files are never uploaded to any server." },
+  ];
+
   return (
     <PageLayout title="MP3 Cutter" description="Trim and cut your audio files with precision">
+      <SEOHead
+        title="MP3 Cutter - Trim Audio Files Online | Utility Master"
+        description="Free online audio cutter. Trim MP3, WAV, and other audio files with precision. No upload required - works 100% in your browser."
+        keywords="mp3 cutter, audio cutter, trim audio, cut mp3, audio trimmer, free audio editor"
+        canonicalUrl="/mp3-cutter"
+      />
       <AdBanner />
       <div className="space-y-6 max-w-4xl mx-auto">
         <Card className="border-border">
@@ -182,6 +197,8 @@ const Mp3Cutter = () => {
             </Card>
           </>
         )}
+        
+        <FAQ items={faqs} />
       </div>
     </PageLayout>
   );
