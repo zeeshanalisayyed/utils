@@ -3,8 +3,8 @@ import { useLocation } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { AdBanner } from './AdBanner';
 
-const INTERSTITIAL_COOLDOWN = 60000; // 60 seconds between interstitials
-const COUNTDOWN_SECONDS = 5;
+const INTERSTITIAL_COOLDOWN = 45000; // 45 seconds between interstitials (was 60)
+const COUNTDOWN_SECONDS = 4; // Reduced from 5 for better UX
 
 export const InterstitialAd = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -32,7 +32,7 @@ export const InterstitialAd = () => {
     const timeSinceLastShown = now - lastShown;
     
     // Show interstitial every 3rd navigation, with cooldown
-    if (navigationCount > 0 && navigationCount % 3 === 0 && timeSinceLastShown > INTERSTITIAL_COOLDOWN) {
+    if (navigationCount > 0 && navigationCount % 2 === 0 && timeSinceLastShown > INTERSTITIAL_COOLDOWN) {
       setIsVisible(true);
       setLastShown(now);
       setCountdown(COUNTDOWN_SECONDS);
