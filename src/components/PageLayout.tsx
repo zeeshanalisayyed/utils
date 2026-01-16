@@ -5,7 +5,7 @@ import { ArrowLeft, Home } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { RelatedTools, getRelatedTools } from "./RelatedTools";
 import { useToolTracking } from "./EngagementBanner";
-import { AdBanner, InArticleAd, FooterAd } from "./AdBanner";
+import { AdBanner, InArticleAd, FooterAd, PremiumAd } from "./AdBanner";
 
 interface PageLayoutProps {
   children: ReactNode;
@@ -107,6 +107,9 @@ export function PageLayout({ children, title, description, showBackButton = true
           </div>
         </div>
       </main>
+
+      {/* Premium Ad before footer */}
+      <PremiumAd />
 
       {/* Footer Ad */}
       <FooterAd />

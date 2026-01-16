@@ -1,7 +1,7 @@
 import React from "react";
 import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers, ArrowRight, Crown, Rocket, Smile, Radio, X, Filter, Star } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { AdBanner, InArticleAd, FooterAd, InFeedAd } from "@/components/AdBanner";
+import { AdBanner, InArticleAd, FooterAd, InFeedAd, PremiumAd } from "@/components/AdBanner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ToolCard } from "@/components/ToolCard";
@@ -379,8 +379,8 @@ const Index = () => {
               {filteredUtilities.map((utility, index) => (
                 <React.Fragment key={utility.path}>
                   <ToolCard {...utility} index={index} isPopular={popularToolPaths.includes(utility.path)} />
-                  {/* Insert native in-feed ad after every 10 tools */}
-                  {(index + 1) % 10 === 0 && index < filteredUtilities.length - 1 && (
+                  {/* Insert native in-feed ad after every 6 tools for higher ad density */}
+                  {(index + 1) % 6 === 0 && index < filteredUtilities.length - 1 && (
                     <InFeedAd />
                   )}
                 </React.Fragment>
@@ -431,6 +431,9 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        {/* Premium Ad before Footer */}
+        <PremiumAd />
         
         {/* Footer Ad */}
         <FooterAd />

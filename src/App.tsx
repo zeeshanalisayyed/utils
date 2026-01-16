@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { InterstitialAd } from "@/components/InterstitialAd";
 import { MobileStickyAd } from "@/components/MobileStickyAd";
+import { ExitIntentAd } from "@/components/ExitIntentAd";
+import { AnchorAd } from "@/components/AnchorAd";
+import { ScrollProgressAd } from "@/components/ScrollProgressAd";
 import { ConsentBanner } from "@/components/ConsentBanner";
 import Index from "./pages/Index";
 import SipCalculator from "./pages/SipCalculator";
@@ -88,8 +91,17 @@ const App = () => (
         {/* Interstitial Ad - shows every 3rd tool page navigation */}
         <InterstitialAd />
         
+        {/* Exit Intent Ad - shows when user tries to leave (desktop) */}
+        <ExitIntentAd />
+        
+        {/* Scroll Progress Ad - shows at 60% scroll depth (desktop) */}
+        <ScrollProgressAd />
+        
         {/* Mobile Sticky Bottom Ad */}
         <MobileStickyAd />
+        
+        {/* Desktop Anchor Ad - sticky bottom banner */}
+        <AnchorAd />
         
         <Routes>
           <Route path="/" element={<Index />} />

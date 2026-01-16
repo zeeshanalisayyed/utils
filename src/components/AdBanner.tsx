@@ -8,8 +8,16 @@ interface AdBannerProps {
   style?: React.CSSProperties;
 }
 
+// Different ad slots for better targeting and higher CPM
+const AD_SLOTS = {
+  default: '1203847594',
+  premium: '1203847594', // Use same slot but can be different
+  sidebar: '1203847594',
+  footer: '1203847594',
+};
+
 export const AdBanner = ({ 
-  slot = '1203847594', 
+  slot = AD_SLOTS.default, 
   format = 'auto',
   responsive = true,
   className = '',
@@ -17,6 +25,7 @@ export const AdBanner = ({
 }: AdBannerProps) => {
   const adRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [adKey] = useState(() => Math.random().toString(36).substring(7));
 
   useEffect(() => {
     // Use IntersectionObserver to load ads only when visible (lazy loading)
@@ -28,7 +37,7 @@ export const AdBanner = ({
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.1, rootMargin: '100px' } // Load slightly before visible
     );
 
     if (adRef.current) {
@@ -40,12 +49,16 @@ export const AdBanner = ({
 
   useEffect(() => {
     if (isVisible) {
-      try {
-        // @ts-ignore
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
-      } catch (err) {
-        console.error('AdSense error:', err);
-      }
+      // Small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        try {
+          // @ts-ignore
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+        } catch (err) {
+          console.error('AdSense error:', err);
+        }
+      }, 100);
+      return () => clearTimeout(timer);
     }
   }, [isVisible]);
 
@@ -54,6 +67,7 @@ export const AdBanner = ({
       ref={adRef}
       className={`ad-container my-6 min-h-[100px] ${className}`}
       style={style}
+      data-ad-key={adKey}
     >
       {isVisible && (
         <ins
@@ -102,14 +116,29 @@ export const FooterAd = ({ className = '' }: { className?: string }) => (
 
 // Native in-feed ad that blends with tool cards
 export const InFeedAd = ({ className = '' }: { className?: string }) => (
-  <div className={`group relative overflow-hidden rounded-2xl border border-border bg-card p-5 transition-all duration-300 hover:shadow-lg ${className}`}>
+  <div className={`group relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-br from-card to-primary/5 p-5 transition-all duration-300 hover:shadow-lg hover:border-primary/30 ${className}`}>
     <div className="absolute top-2 right-2">
-      <span className="text-[10px] text-muted-foreground/60 uppercase tracking-wider">Sponsored</span>
+      <span className="text-[10px] text-primary/60 uppercase tracking-wider font-medium">Sponsored</span>
     </div>
     <AdBanner 
       format="fluid" 
       responsive={true}
       style={{ minHeight: '120px' }}
     />
+  </div>
+);
+
+// Premium large ad for high-visibility placements
+export const PremiumAd = ({ className = '' }: { className?: string }) => (
+  <div className={`bg-gradient-to-r from-primary/5 via-transparent to-accent/5 py-8 ${className}`}>
+    <div className="container mx-auto px-4">
+      <div className="text-center mb-2">
+        <span className="text-xs text-muted-foreground uppercase tracking-wider">Featured Partner</span>
+      </div>
+      <AdBanner 
+        format="horizontal" 
+        style={{ minHeight: '90px' }}
+      />
+    </div>
   </div>
 );
