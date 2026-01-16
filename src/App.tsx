@@ -79,6 +79,11 @@ import AspectRatioCalculator from "./pages/AspectRatioCalculator";
 import EmojiPicker from "./pages/EmojiPicker";
 import MorseCodeTranslator from "./pages/MorseCodeTranslator";
 import AiVideoGenerator from "./pages/AiVideoGenerator";
+import InvoiceGenerator from "./pages/InvoiceGenerator";
+import BarcodeGenerator from "./pages/BarcodeGenerator";
+import ColorPaletteGenerator from "./pages/ColorPaletteGenerator";
+import TextEncryptor from "./pages/TextEncryptor";
+import ReadingTimeCalculator from "./pages/ReadingTimeCalculator";
 
 const queryClient = new QueryClient();
 
@@ -173,6 +178,11 @@ const App = () => (
           <Route path="/emoji-picker" element={<EmojiPicker />} />
           <Route path="/morse-code-translator" element={<MorseCodeTranslator />} />
           <Route path="/ai-video-generator" element={<AiVideoGenerator />} />
+          <Route path="/invoice-generator" element={<InvoiceGenerator />} />
+          <Route path="/barcode-generator" element={<BarcodeGenerator />} />
+          <Route path="/color-palette-generator" element={<ColorPaletteGenerator />} />
+          <Route path="/text-encryptor" element={<TextEncryptor />} />
+          <Route path="/reading-time-calculator" element={<ReadingTimeCalculator />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         
