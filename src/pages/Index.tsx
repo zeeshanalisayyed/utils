@@ -1,5 +1,5 @@
 import React from "react";
-import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers, ArrowRight, Crown, Rocket, Smile, Radio, X, Filter, Star } from "lucide-react";
+import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers, ArrowRight, Crown, Rocket, Smile, Radio, X, Filter, Star, Receipt, Lock, BookOpen } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { AdBanner, InArticleAd, FooterAd, InFeedAd, PremiumAd } from "@/components/AdBanner";
 import { Header } from "@/components/Header";
@@ -119,6 +119,11 @@ const utilities: Utility[] = [
   // New Tools
   { title: "Emoji Picker", description: "Search and copy emojis easily", icon: Smile, path: "/emoji-picker", gradient: "from-yellow-500 to-orange-500", category: "text" },
   { title: "Morse Code Translator", description: "Convert text to morse code", icon: Radio, path: "/morse-code-translator", gradient: "from-primary to-accent", category: "converters" },
+  { title: "Invoice Generator", description: "Create professional invoices", icon: Receipt, path: "/invoice-generator", gradient: "from-primary-glow to-accent", category: "financial" },
+  { title: "Barcode Generator", description: "Generate product barcodes", icon: BarChart3, path: "/barcode-generator", gradient: "from-accent to-primary", category: "design" },
+  { title: "Color Palette", description: "Generate color schemes", icon: Palette, path: "/color-palette-generator", gradient: "from-primary to-primary-glow", category: "design" },
+  { title: "Text Encryptor", description: "Encrypt and decrypt text", icon: Lock, path: "/text-encryptor", gradient: "from-accent to-primary-glow", category: "developer" },
+  { title: "Reading Time", description: "Estimate reading duration", icon: BookOpen, path: "/reading-time-calculator", gradient: "from-primary-glow to-primary", category: "text" },
 ];
 
 const features = [
