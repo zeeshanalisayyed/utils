@@ -40,12 +40,12 @@ Deno.serve(async (req) => {
     }
 
     if (!RAPIDAPI_KEY) {
-      console.log('RAPIDAPI_KEY not configured');
+      console.error('RAPIDAPI_KEY not configured');
       return new Response(JSON.stringify({ 
-        error: 'RAPIDAPI_KEY not configured. Please add your RapidAPI key in project secrets.',
+        error: 'Video download service temporarily unavailable. Please try again later.',
         platform: 'unknown'
       }), {
-        status: 400,
+        status: 503,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -114,9 +114,8 @@ Deno.serve(async (req) => {
     });
   } catch (error: unknown) {
     console.error('Error processing request:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(JSON.stringify({ 
-      error: errorMessage,
+      error: 'An error occurred while processing your request. Please try again.',
       platform: 'unknown'
     }), {
       status: 500,
@@ -179,7 +178,7 @@ async function downloadYouTube(url: string): Promise<VideoInfo> {
     console.error('YouTube download error:', error);
     return {
       platform: 'youtube',
-      error: 'Failed to fetch YouTube video. Please check your RAPIDAPI_KEY is valid and has access to YouTube downloader APIs.'
+      error: 'Failed to fetch YouTube video. Please try again later.'
     };
   }
 }
