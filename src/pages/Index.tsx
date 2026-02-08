@@ -1,5 +1,5 @@
 import React from "react";
-import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers, ArrowRight, Crown, Rocket, Smile, Radio, X, Filter, Star, Receipt, Lock, BookOpen } from "lucide-react";
+import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers, ArrowRight, Crown, Rocket, Smile, Radio, X, Filter, Star, Receipt, Lock, BookOpen, Link2, Percent, Repeat, Key, Database } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { AdBanner, InArticleAd, FooterAd, InFeedAd, PremiumAd } from "@/components/AdBanner";
 import { Header } from "@/components/Header";
@@ -124,6 +124,12 @@ const utilities: Utility[] = [
   { title: "Color Palette", description: "Generate color schemes", icon: Palette, path: "/color-palette-generator", gradient: "from-primary to-primary-glow", category: "design" },
   { title: "Text Encryptor", description: "Encrypt and decrypt text", icon: Lock, path: "/text-encryptor", gradient: "from-accent to-primary-glow", category: "developer" },
   { title: "Reading Time", description: "Estimate reading duration", icon: BookOpen, path: "/reading-time-calculator", gradient: "from-primary-glow to-primary", category: "text" },
+  { title: "Slug Generator", description: "Create URL-friendly slugs", icon: Link2, path: "/slug-generator", gradient: "from-primary to-accent", category: "developer" },
+  { title: "Discount Calculator", description: "Calculate discounts and savings", icon: Percent, path: "/discount-calculator", gradient: "from-accent to-primary-glow", category: "financial" },
+  { title: "Text Repeater", description: "Repeat text multiple times", icon: Repeat, path: "/text-repeater", gradient: "from-primary-glow to-accent", category: "text" },
+  { title: "JWT Decoder", description: "Decode JSON Web Tokens", icon: Key, path: "/jwt-decoder", gradient: "from-accent to-primary", category: "developer" },
+  { title: "Cron Generator", description: "Build cron expressions", icon: Clock, path: "/cron-generator", gradient: "from-primary to-primary-glow", category: "developer" },
+  { title: "SQL Formatter", description: "Format and beautify SQL", icon: Database, path: "/sql-formatter", gradient: "from-primary-glow to-accent", category: "developer" },
 ];
 
 const features = [

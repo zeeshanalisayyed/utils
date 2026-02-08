@@ -84,6 +84,12 @@ import BarcodeGenerator from "./pages/BarcodeGenerator";
 import ColorPaletteGenerator from "./pages/ColorPaletteGenerator";
 import TextEncryptor from "./pages/TextEncryptor";
 import ReadingTimeCalculator from "./pages/ReadingTimeCalculator";
+import SlugGenerator from "./pages/SlugGenerator";
+import DiscountCalculator from "./pages/DiscountCalculator";
+import TextRepeater from "./pages/TextRepeater";
+import JwtDecoder from "./pages/JwtDecoder";
+import CronGenerator from "./pages/CronGenerator";
+import SqlFormatter from "./pages/SqlFormatter";
 
 const queryClient = new QueryClient();
 
@@ -183,6 +189,12 @@ const App = () => (
           <Route path="/color-palette-generator" element={<ColorPaletteGenerator />} />
           <Route path="/text-encryptor" element={<TextEncryptor />} />
           <Route path="/reading-time-calculator" element={<ReadingTimeCalculator />} />
+          <Route path="/slug-generator" element={<SlugGenerator />} />
+          <Route path="/discount-calculator" element={<DiscountCalculator />} />
+          <Route path="/text-repeater" element={<TextRepeater />} />
+          <Route path="/jwt-decoder" element={<JwtDecoder />} />
+          <Route path="/cron-generator" element={<CronGenerator />} />
+          <Route path="/sql-formatter" element={<SqlFormatter />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         

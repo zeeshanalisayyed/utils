@@ -11,6 +11,7 @@ import { PageLayout } from "@/components/PageLayout";
 import { SEOHead } from "@/components/SEOHead";
 import { FAQ } from "@/components/FAQ";
 import { useToast } from "@/hooks/use-toast";
+import DOMPurify from "dompurify";
 
 const RegexTester = () => {
   const [pattern, setPattern] = useState("");
@@ -67,7 +68,7 @@ const RegexTester = () => {
   };
 
   const highlightMatches = () => {
-    if (!pattern || !testString) return testString;
+    if (!pattern || !testString) return DOMPurify.sanitize(testString);
 
     try {
       let flagString = "";
@@ -76,9 +77,13 @@ const RegexTester = () => {
       if (flags.multiline) flagString += "m";
 
       const regex = new RegExp(`(${pattern})`, flagString);
-      return testString.replace(regex, '<mark>$1</mark>');
+      const highlighted = testString.replace(regex, '<mark>$1</mark>');
+      return DOMPurify.sanitize(highlighted, {
+        ALLOWED_TAGS: ['mark'],
+        ALLOWED_ATTR: []
+      });
     } catch {
-      return testString;
+      return DOMPurify.sanitize(testString);
     }
   };
 
