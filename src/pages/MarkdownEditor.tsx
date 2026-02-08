@@ -9,6 +9,7 @@ import { PageLayout } from "@/components/PageLayout";
 import { SEOHead } from "@/components/SEOHead";
 import { FAQ } from "@/components/FAQ";
 import { useToast } from "@/hooks/use-toast";
+import DOMPurify from "dompurify";
 
 const MarkdownEditor = () => {
   const [markdown, setMarkdown] = useState("# Hello World\n\nThis is **bold** and this is *italic*.\n\n- Item 1\n- Item 2\n\n[Link](https://example.com)");
@@ -25,14 +26,20 @@ const MarkdownEditor = () => {
     html = html.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
     // Italic
     html = html.replace(/\*(.*?)\*/gim, '<em>$1</em>');
-    // Links
-    html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/gim, '<a href="$2">$1</a>');
+    // Links - only allow safe http/https URLs
+    html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/gim, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+    // Remove any remaining markdown links with unsafe protocols
+    html = html.replace(/\[([^\]]+)\]\([^)]+\)/gim, '$1');
     // Lists
     html = html.replace(/^- (.*$)/gim, '<li>$1</li>');
     html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
     // Line breaks
     html = html.replace(/\n/gim, '<br>');
-    return html;
+    // Sanitize HTML to prevent XSS attacks
+    return DOMPurify.sanitize(html, { 
+      ALLOWED_TAGS: ['h1', 'h2', 'h3', 'strong', 'em', 'a', 'ul', 'li', 'br'],
+      ALLOWED_ATTR: ['href', 'target', 'rel']
+    });
   };
 
   const copyToClipboard = async () => {
