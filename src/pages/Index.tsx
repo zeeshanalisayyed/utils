@@ -130,6 +130,11 @@ const utilities: Utility[] = [
   { title: "JWT Decoder", description: "Decode JSON Web Tokens", icon: Key, path: "/jwt-decoder", gradient: "from-accent to-primary", category: "developer" },
   { title: "Cron Generator", description: "Build cron expressions", icon: Clock, path: "/cron-generator", gradient: "from-primary to-primary-glow", category: "developer" },
   { title: "SQL Formatter", description: "Format and beautify SQL", icon: Database, path: "/sql-formatter", gradient: "from-primary-glow to-accent", category: "developer" },
+
+  // Lifestyle & Health
+  { title: "Calorie Counter", description: "Calculate daily calorie needs", icon: Activity, path: "/calorie-counter", gradient: "from-primary to-accent", category: "financial" },
+  { title: "Sleep Calculator", description: "Optimize your sleep cycles", icon: Clock, path: "/sleep-calculator", gradient: "from-accent to-primary-glow", category: "time" },
+  { title: "Water Intake Tracker", description: "Track daily hydration goals", icon: Activity, path: "/water-intake-tracker", gradient: "from-primary-glow to-primary", category: "productivity" },
 ];
 
 const features = [
