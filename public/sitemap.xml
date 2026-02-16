@@ -486,6 +486,27 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+
+  <!-- Lifestyle & Health -->
+  <url>
+    <loc>https://utils.lovable.app/calorie-counter</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://utils.lovable.app/sleep-calculator</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://utils.lovable.app/water-intake-tracker</loc>
+    <lastmod>2026-02-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <url>
     <loc>https://utils.lovable.app/privacy-policy</loc>
     <lastmod>2026-01-12</lastmod>
