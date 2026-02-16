@@ -90,6 +90,9 @@ import TextRepeater from "./pages/TextRepeater";
 import JwtDecoder from "./pages/JwtDecoder";
 import CronGenerator from "./pages/CronGenerator";
 import SqlFormatter from "./pages/SqlFormatter";
+import CalorieCounter from "./pages/CalorieCounter";
+import SleepCalculator from "./pages/SleepCalculator";
+import WaterIntakeTracker from "./pages/WaterIntakeTracker";
 
 const queryClient = new QueryClient();
 
@@ -195,6 +198,9 @@ const App = () => (
           <Route path="/jwt-decoder" element={<JwtDecoder />} />
           <Route path="/cron-generator" element={<CronGenerator />} />
           <Route path="/sql-formatter" element={<SqlFormatter />} />
+          <Route path="/calorie-counter" element={<CalorieCounter />} />
+          <Route path="/sleep-calculator" element={<SleepCalculator />} />
+          <Route path="/water-intake-tracker" element={<WaterIntakeTracker />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         
