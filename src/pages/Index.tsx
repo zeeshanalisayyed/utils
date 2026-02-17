@@ -225,52 +225,63 @@ const Index = () => {
       <ScrollToTop />
 
       <main className="flex-1">
-        {/* Hero Section - Simplified & Clean */}
-        <section className="relative overflow-hidden py-16 md:py-24">
-          <div className="absolute inset-0 gradient-mesh opacity-50" />
-          
-          {/* Subtle gradient orbs */}
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-accent/10 rounded-full blur-3xl" />
-          
+        {/* ── Premium Hero ─────────────────────────────────── */}
+        <section className="relative overflow-hidden py-20 md:py-32">
+          {/* Layered background */}
+          <div className="absolute inset-0 gradient-mesh" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/0 via-background/0 to-background" />
+
+          {/* Glowing orbs */}
+          <div className="absolute -top-32 -left-32 w-96 h-96 bg-primary/20 rounded-full blur-[100px] animate-pulse-soft" />
+          <div className="absolute -bottom-32 -right-32 w-80 h-80 bg-accent/20 rounded-full blur-[100px] animate-pulse-soft" style={{ animationDelay: "1s" }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px]" />
+
+          {/* Grid pattern overlay */}
+          <div className="absolute inset-0 opacity-[0.025]" style={{ backgroundImage: "linear-gradient(hsl(var(--foreground)) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground)) 1px, transparent 1px)", backgroundSize: "60px 60px" }} />
+
           <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
-              {/* Simple badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
-                <Sparkles className="h-4 w-4 text-primary" />
-                <span className="text-sm font-medium text-primary">50+ Free Tools</span>
+
+              {/* Pill badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/25 mb-8 shadow-[0_0_20px_-4px_hsl(var(--primary)/0.4)] backdrop-blur-sm">
+                <Crown className="h-3.5 w-3.5 text-primary" />
+                <span className="text-sm font-semibold text-primary tracking-wide">50+ Premium Free Tools</span>
+                <span className="ml-1 px-2 py-0.5 rounded-full bg-primary/15 text-primary text-[10px] font-bold">NEW</span>
               </div>
-              
-              {/* Clean headline */}
-              <h1 className="text-4xl md:text-6xl font-bold font-display mb-4 text-foreground">
-                All Your Tools in <span className="gradient-text">One Place</span>
+
+              {/* Headline */}
+              <h1 className="text-5xl md:text-7xl font-bold font-display mb-5 text-foreground leading-[1.08] tracking-tight text-balance">
+                All Your Tools,{" "}
+                <span className="relative inline-block">
+                  <span className="gradient-text">One Place</span>
+                  <span className="absolute -bottom-1 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+                </span>
               </h1>
-              
-              <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Free calculators, converters, and utilities. No signup. Works offline.
+
+              <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+                Calculators, converters, developer tools & utilities — all free, no sign-up, and privacy-first.
               </p>
 
-              {/* Single prominent CTA + Search */}
-              <div className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto mb-8">
+              {/* Search + CTA */}
+              <div className="flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto mb-10">
                 <div className="relative flex-1">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground pointer-events-none" />
                   <Input
                     type="text"
                     placeholder="Search 50+ tools..."
                     value={searchQuery}
                     onChange={(e) => {
                       setSearchQuery(e.target.value);
-                      // Auto-scroll to tools when searching
                       if (e.target.value) {
                         document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth' });
                       }
                     }}
-                    className="pl-12 h-14 text-base rounded-2xl border-2 border-border focus:border-primary bg-background shadow-sm"
+                    className="pl-12 h-14 text-base rounded-2xl border-2 border-border/80 focus:border-primary bg-background/90 backdrop-blur-sm shadow-lg placeholder:text-muted-foreground/60"
                   />
                 </div>
-                <a 
-                  href="#tools" 
-                  className="inline-flex items-center justify-center gap-2 px-6 h-14 rounded-2xl gradient-bg text-primary-foreground font-semibold shadow-lg hover:shadow-glow transition-all hover:scale-105"
+                <a
+                  href="#tools"
+                  className="inline-flex items-center justify-center gap-2 px-7 h-14 rounded-2xl gradient-bg text-primary-foreground font-bold shadow-[0_8px_24px_-6px_hsl(var(--primary)/0.5)] hover:shadow-[0_10px_32px_-6px_hsl(var(--primary)/0.6)] hover:scale-105 transition-all duration-200 whitespace-nowrap"
                 >
                   <Rocket className="h-5 w-5" />
                   <span className="hidden sm:inline">Browse Tools</span>
@@ -278,33 +289,32 @@ const Index = () => {
                 </a>
               </div>
 
-              {/* Minimal trust indicators */}
-              <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
-                <span className="flex items-center gap-1.5">
-                  <Shield className="h-4 w-4 text-primary" />
-                  100% Private
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Globe className="h-4 w-4 text-primary" />
-                  Works Offline
-                </span>
-                <span className="flex items-center gap-1.5">
-                  <Zap className="h-4 w-4 text-primary" />
-                  No Signup
-                </span>
+              {/* Trust pills */}
+              <div className="flex flex-wrap justify-center gap-3">
+                {[
+                  { icon: Shield, label: "100% Private" },
+                  { icon: Globe, label: "Works Offline" },
+                  { icon: Zap, label: "No Signup" },
+                ].map(({ icon: Icon, label }) => (
+                  <span key={label} className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-card/80 backdrop-blur border border-border/60 text-sm text-muted-foreground shadow-sm">
+                    <Icon className="h-3.5 w-3.5 text-primary" />
+                    {label}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* Quick Access Categories - Horizontal Scroll */}
-        <section className="py-6 border-y border-border bg-muted/30">
+        {/* Category Strip */}
+        <section className="py-5 border-y border-border/60 bg-card/40 backdrop-blur-sm">
           <div className="container mx-auto px-4">
-            <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide">
-              <span className="text-sm text-muted-foreground whitespace-nowrap">Jump to:</span>
+            <div className="flex items-center gap-2.5 overflow-x-auto pb-1 scrollbar-hide">
+              <span className="text-xs font-semibold text-muted-foreground whitespace-nowrap uppercase tracking-wider mr-1">Filter:</span>
               {(Object.keys(categoryInfo) as Category[]).slice(1).map((category) => {
                 const info = categoryInfo[category];
                 const Icon = info.icon;
+                const isActive = selectedCategory === category;
                 return (
                   <button
                     key={category}
@@ -312,9 +322,13 @@ const Index = () => {
                       setSelectedCategory(category);
                       document.getElementById('tools')?.scrollIntoView({ behavior: 'smooth' });
                     }}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-background border border-border hover:border-primary/50 hover:bg-primary/5 transition-all whitespace-nowrap text-sm font-medium"
+                    className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm font-medium transition-all duration-200 whitespace-nowrap border
+                      ${isActive
+                        ? "gradient-bg text-primary-foreground border-transparent shadow-[0_2px_12px_-2px_hsl(var(--primary)/0.4)]"
+                        : "bg-background border-border/60 text-muted-foreground hover:border-primary/40 hover:text-primary hover:bg-primary/5"
+                      }`}
                   >
-                    <Icon className="h-4 w-4 text-primary" />
+                    <Icon className="h-3.5 w-3.5" />
                     {info.label}
                   </button>
                 );
@@ -339,87 +353,80 @@ const Index = () => {
         </div>
 
         {/* Tools Grid - Main Section */}
-        <section id="tools" className="py-10">
+        <section id="tools" className="py-12">
           <div className="container mx-auto px-4">
-            {/* Simple Header with Filter */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            {/* Section Header */}
+            <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-8">
               <div>
-                <h2 className="text-2xl md:text-3xl font-bold font-display text-foreground">
+                <p className="text-xs font-semibold text-primary uppercase tracking-widest mb-1">
+                  {selectedCategory === "all" ? "Full Collection" : "Filtered Results"}
+                </p>
+                <h2 className="text-2xl md:text-3xl font-bold font-display text-foreground tracking-tight">
                   {selectedCategory === "all" ? "All Tools" : categoryInfo[selectedCategory].label}
                 </h2>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {filteredUtilities.length} tools available
+                  <span className="font-semibold text-foreground">{filteredUtilities.length}</span> tools available
                 </p>
               </div>
-              
-              {/* Quick Filters */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <button
                   onClick={() => setShowPopularOnly(!showPopularOnly)}
-                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium border transition-all duration-200 ${
                     showPopularOnly
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-muted hover:bg-muted/80 text-foreground"
+                      ? "gradient-bg text-primary-foreground border-transparent shadow-[0_2px_10px_-2px_hsl(var(--primary)/0.4)]"
+                      : "bg-card border-border text-muted-foreground hover:border-primary/40 hover:text-primary"
                   }`}
                 >
                   <Star className={`h-3.5 w-3.5 ${showPopularOnly ? "fill-current" : ""}`} />
                   Popular
                 </button>
-                {selectedCategory !== "all" && (
+                {(selectedCategory !== "all" || showPopularOnly || searchQuery) && (
                   <button
-                    onClick={() => setSelectedCategory("all")}
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-muted hover:bg-muted/80 text-sm font-medium text-foreground"
+                    onClick={() => { setSelectedCategory("all"); setShowPopularOnly(false); setSearchQuery(""); }}
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-card border border-border text-sm font-medium text-muted-foreground hover:border-destructive/40 hover:text-destructive transition-all duration-200"
                   >
                     <X className="h-3.5 w-3.5" />
-                    Clear Filter
+                    Clear All
                   </button>
                 )}
               </div>
             </div>
 
-            {/* Active Search Display */}
             {searchQuery && (
               <div className="flex items-center gap-2 mb-6">
-                <span className="text-sm text-muted-foreground">Searching:</span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium">
+                <span className="text-sm text-muted-foreground">Results for:</span>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-semibold">
                   "{searchQuery}"
-                  <button onClick={() => setSearchQuery("")} className="hover:bg-primary/20 rounded-full p-0.5">
-                    <X className="h-3.5 w-3.5" />
+                  <button onClick={() => setSearchQuery("")} className="hover:bg-primary/20 rounded-full p-0.5 transition-colors">
+                    <X className="h-3 w-3" />
                   </button>
                 </span>
               </div>
             )}
 
-            {/* Tools Grid - Clean & Simple */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
               {filteredUtilities.map((utility, index) => (
                 <React.Fragment key={utility.path}>
                   <ToolCard {...utility} index={index} isPopular={popularToolPaths.includes(utility.path)} />
-                  {/* Insert native in-feed ad after every 6 tools for higher ad density */}
                   {(index + 1) % 6 === 0 && index < filteredUtilities.length - 1 && (
                     <InFeedAd />
                   )}
                 </React.Fragment>
               ))}
             </div>
-            
-            {/* No Results State */}
+
             {filteredUtilities.length === 0 && (
-              <div className="text-center py-16">
-                <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                  <Search className="h-8 w-8 text-muted-foreground" />
+              <div className="text-center py-20">
+                <div className="h-20 w-20 rounded-2xl bg-muted/60 border border-border flex items-center justify-center mx-auto mb-5 shadow-sm">
+                  <Search className="h-9 w-9 text-muted-foreground/60" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground mb-2">No tools found</h3>
-                <p className="text-muted-foreground mb-4">Try adjusting your search or filters</p>
+                <h3 className="text-xl font-bold font-display text-foreground mb-2">No tools found</h3>
+                <p className="text-muted-foreground mb-6">Try a different keyword or browse all categories</p>
                 <button
-                  onClick={() => {
-                    setSearchQuery("");
-                    setShowPopularOnly(false);
-                    setSelectedCategory("all");
-                  }}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium hover:bg-primary/90 transition-colors"
+                  onClick={() => { setSearchQuery(""); setShowPopularOnly(false); setSelectedCategory("all"); }}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl gradient-bg text-primary-foreground font-semibold shadow-sm hover:scale-105 transition-all"
                 >
-                  Clear all filters
+                  Show All Tools
                 </button>
               </div>
             )}
@@ -431,18 +438,30 @@ const Index = () => {
           <AdBanner format="horizontal" />
         </div>
 
-        {/* CTA Section */}
-        <section className="py-16 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h2 className="text-2xl md:text-3xl font-bold font-display text-foreground mb-4">
-                Ready to Boost Your Productivity?
+        {/* Premium CTA Section */}
+        <section className="py-20 relative overflow-hidden">
+          <div className="absolute inset-0 gradient-mesh opacity-60" />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-accent/5" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+          <div className="container mx-auto px-4 relative z-10">
+            <div className="max-w-2xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 mb-6 text-xs font-semibold text-primary tracking-wide uppercase">
+                <Sparkles className="h-3 w-3" />
+                Always Free
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold font-display text-foreground mb-4 tracking-tight">
+                Ready to boost your{" "}
+                <span className="gradient-text">productivity?</span>
               </h2>
-              <p className="text-muted-foreground mb-8">
-                Join thousands of users who save time every day with Utility Master. All tools are free, fast, and privacy-focused.
+              <p className="text-muted-foreground mb-8 leading-relaxed">
+                Join thousands saving time daily with Utility Master. Free, fast, and 100% privacy-focused.
               </p>
-              <a href="#tools" className="inline-flex items-center gap-2 px-6 py-3 rounded-xl gradient-bg text-primary-foreground font-semibold shadow-soft hover:shadow-glow transition-all duration-300">
-                Start Using Tools
+              <a
+                href="#tools"
+                className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl gradient-bg text-primary-foreground font-bold text-base shadow-[0_8px_30px_-6px_hsl(var(--primary)/0.5)] hover:shadow-[0_12px_40px_-6px_hsl(var(--primary)/0.6)] hover:scale-105 transition-all duration-200"
+              >
+                <Rocket className="h-5 w-5" />
+                Start Using Tools — It's Free
               </a>
             </div>
           </div>

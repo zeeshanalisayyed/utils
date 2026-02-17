@@ -1,4 +1,4 @@
-import { LucideIcon, Star, ArrowRight, Sparkles } from "lucide-react";
+import { LucideIcon, Star, ArrowRight, Sparkles, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getProgress } from "@/hooks/useToolUsage";
@@ -32,68 +32,82 @@ export function ToolCard({ title, description, icon: Icon, path, gradient, index
   };
 
   return (
-    <Link 
-      to={path} 
+    <Link
+      to={path}
       className="block group focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-2xl"
     >
       <div
-        className={`relative overflow-hidden rounded-2xl bg-card border transition-all duration-300 h-full ${
-          isUsed 
-            ? "border-primary/30 bg-primary/5" 
-            : "border-border/50 hover:border-primary/30"
-        } p-4 sm:p-5 hover:shadow-strong hover:-translate-y-1`}
-        style={{ animationDelay: `${index * 30}ms` }}
+        className={`relative overflow-hidden rounded-2xl h-full transition-all duration-300 cursor-pointer
+          bg-card border
+          ${isUsed
+            ? "border-primary/40 shadow-[0_0_0_1px_hsl(var(--primary)/0.2)]"
+            : "border-border/60 hover:border-primary/40"
+          }
+          hover:-translate-y-1.5 hover:shadow-[0_12px_40px_-8px_hsl(var(--primary)/0.25)]
+          p-4 sm:p-5
+        `}
+        style={{ animationDelay: `${index * 25}ms` }}
       >
-        {/* Badges and Favorite Button */}
-        <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5">
+        {/* Shimmer overlay on hover */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/6 via-transparent to-accent/6" />
+          <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+        </div>
+
+        {/* Badges + Fav */}
+        <div className="absolute top-2.5 right-2.5 flex items-center gap-1.5 z-10">
           <button
             onClick={handleToggleFavorite}
-            className={`p-1.5 rounded-full transition-all ${
-              isFav 
-                ? "bg-yellow-500/10 hover:bg-yellow-500/20" 
-                : "bg-muted/50 hover:bg-muted opacity-0 group-hover:opacity-100"
+            className={`p-1.5 rounded-full transition-all duration-200 ${
+              isFav
+                ? "bg-warning/15 hover:bg-warning/25"
+                : "bg-muted/60 hover:bg-muted opacity-0 group-hover:opacity-100"
             }`}
             aria-label={isFav ? "Remove from favorites" : "Add to favorites"}
           >
-            <Star className={`h-3.5 w-3.5 ${isFav ? "text-yellow-500 fill-yellow-500" : "text-muted-foreground"}`} />
+            <Star className={`h-3 w-3 ${isFav ? "text-warning fill-warning" : "text-muted-foreground"}`} />
           </button>
-          {isUsed && (
-            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary/10 border border-primary/20">
-              <Sparkles className="h-2.5 w-2.5 text-primary" />
-              <span className="text-[9px] font-medium text-primary">Used</span>
-            </div>
-          )}
           {isPopular && (
-            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-yellow-500/10 border border-yellow-500/20">
-              <Star className="h-2.5 w-2.5 text-yellow-500 fill-yellow-500" />
-              <span className="text-[9px] font-medium text-yellow-600 dark:text-yellow-400">Popular</span>
+            <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-warning/10 border border-warning/25">
+              <Zap className="h-2.5 w-2.5 text-warning fill-warning" />
+              <span className="text-[9px] font-semibold text-warning leading-none">HOT</span>
             </div>
           )}
-        </div>
-        
-        {/* Background gradient on hover */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 pointer-events-none" />
-        
-        {/* Icon */}
-        <div
-          className={`relative h-11 w-11 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center mb-3 group-hover:scale-110 group-hover:shadow-glow transition-all duration-300`}
-        >
-          <Icon className="h-5 w-5 text-primary-foreground" />
+          {isUsed && (
+            <div className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-primary/10 border border-primary/25">
+              <Sparkles className="h-2.5 w-2.5 text-primary" />
+              <span className="text-[9px] font-semibold text-primary leading-none">USED</span>
+            </div>
+          )}
         </div>
 
-        {/* Content */}
-        <div className="relative pr-6">
-          <h3 className="text-sm sm:text-base font-semibold font-display text-foreground mb-0.5 group-hover:text-primary transition-colors duration-200 line-clamp-1">
+        {/* Icon */}
+        <div
+          className={`relative h-12 w-12 rounded-2xl bg-gradient-to-br ${gradient} flex items-center justify-center mb-3.5
+            shadow-[0_4px_12px_-2px_hsl(var(--primary)/0.35)]
+            group-hover:scale-110 group-hover:shadow-[0_6px_20px_-2px_hsl(var(--primary)/0.45)]
+            transition-all duration-300`}
+        >
+          <Icon className="h-5.5 w-5.5 text-white drop-shadow-sm" style={{ height: "1.25rem", width: "1.25rem" }} />
+          {/* Inner shine */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-b from-white/25 to-transparent" />
+        </div>
+
+        {/* Text */}
+        <div className="relative pr-5">
+          <h3 className="text-sm sm:text-[0.9rem] font-bold font-display text-foreground mb-0.5 group-hover:text-primary transition-colors duration-200 line-clamp-1 leading-tight">
             {title}
           </h3>
-          <p className="text-xs sm:text-sm text-muted-foreground leading-snug line-clamp-2">
+          <p className="text-xs text-muted-foreground leading-snug line-clamp-2 group-hover:text-muted-foreground/80 transition-colors">
             {description}
           </p>
         </div>
 
-        {/* Arrow indicator */}
-        <div className="absolute bottom-4 right-4 sm:bottom-5 sm:right-5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-          <ArrowRight className="w-4 h-4 text-primary" />
+        {/* Arrow */}
+        <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-1 group-hover:translate-x-0">
+          <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
+            <ArrowRight className="w-3.5 h-3.5 text-primary" />
+          </div>
         </div>
       </div>
     </Link>
