@@ -332,13 +332,6 @@ const Index = () => {
         {/* Recently Used - Quick Access */}
         <RecentlyUsed allTools={utilities} />
 
-        {/* Gamification Dashboard - Compact */}
-        <section className="py-6">
-          <div className="container mx-auto px-4">
-            <GamificationDashboard />
-          </div>
-        </section>
-
         {/* Ad before Tools */}
         <div className="container mx-auto px-4 py-2">
           <AdBanner format="horizontal" />
@@ -459,9 +452,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Premium Ad before Footer */}
-        <PremiumAd />
-        
         {/* Footer Ad */}
         <FooterAd />
       </main>
