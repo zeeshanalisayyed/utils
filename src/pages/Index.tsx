@@ -5,7 +5,6 @@ import { AdBanner, FooterAd, InFeedAd } from "@/components/AdBanner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ToolCard } from "@/components/ToolCard";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { RecentlyUsed } from "@/components/RecentlyUsed";
 import { SEOHead } from "@/components/SEOHead";
