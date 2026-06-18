@@ -1,19 +1,10 @@
 import React from "react";
 import { Calculator, FileText, MessageCircle, DollarSign, Ruler, Activity, Bell, Download, Image, FolderOpen, Wand2, FileType, Volume2, Battery, Scissors, Video, ScanText, RefreshCw, Sparkles, Zap, Shield, Globe, Type, BarChart3, GitCompare, Code, Link, Mic, Hash, Search, Palette, TrendingUp, Dice6, Coins, Mail, Calendar, Clock, Timer, Layers, ArrowRight, Crown, Rocket, Smile, Radio, X, Filter, Star, Receipt, Lock, BookOpen, Link2, Percent, Repeat, Key, Database } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { AdBanner, InArticleAd, FooterAd, InFeedAd, PremiumAd } from "@/components/AdBanner";
+import { AdBanner, FooterAd, InFeedAd } from "@/components/AdBanner";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ToolCard } from "@/components/ToolCard";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { QuickStart } from "@/components/QuickStart";
-import { EngagementBanner } from "@/components/EngagementBanner";
-import { HeroStats } from "@/components/HeroStats";
-import { TrustBadges } from "@/components/TrustBadges";
-import { FloatingElements } from "@/components/FloatingElements";
-import { AdSupportNotice } from "@/components/AdSupportNotice";
-import { FeaturedTool } from "@/components/FeaturedTool";
-import { GamificationDashboard } from "@/components/GamificationDashboard";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { RecentlyUsed } from "@/components/RecentlyUsed";
 import { SEOHead } from "@/components/SEOHead";
@@ -340,13 +331,6 @@ const Index = () => {
         {/* Recently Used - Quick Access */}
         <RecentlyUsed allTools={utilities} />
 
-        {/* Gamification Dashboard - Compact */}
-        <section className="py-6">
-          <div className="container mx-auto px-4">
-            <GamificationDashboard />
-          </div>
-        </section>
-
         {/* Ad before Tools */}
         <div className="container mx-auto px-4 py-2">
           <AdBanner format="horizontal" />
@@ -467,9 +451,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Premium Ad before Footer */}
-        <PremiumAd />
-        
         {/* Footer Ad */}
         <FooterAd />
       </main>

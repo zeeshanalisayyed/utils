@@ -4,11 +4,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { InterstitialAd } from "@/components/InterstitialAd";
-import { MobileStickyAd } from "@/components/MobileStickyAd";
-import { ExitIntentAd } from "@/components/ExitIntentAd";
-import { AnchorAd } from "@/components/AnchorAd";
-import { ScrollProgressAd } from "@/components/ScrollProgressAd";
 import { ConsentBanner } from "@/components/ConsentBanner";
 
 // Eager-load the homepage for fast first paint
@@ -113,12 +108,6 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <InterstitialAd />
-        <ExitIntentAd />
-        <ScrollProgressAd />
-        <MobileStickyAd />
-        <AnchorAd />
-        
         <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/" element={<Index />} />
